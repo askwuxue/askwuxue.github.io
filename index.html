@@ -394,6 +394,56 @@ Quick
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2018/04/20/ES%E6%96%B0%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0_%E7%AC%AC%E4%B8%80%E5%9B%9E/">外边距叠加的相关问题</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2018/04/20/ES%E6%96%B0%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0_%E7%AC%AC%E4%B8%80%E5%9B%9E/">
+          
+          
+            
+          
+          随着学习的深入，真的发现ECMAScript5留下了蛮多坑的，还好，标准不断的更新，语言也会越来越好，简单看一下ES6新的语法，慢慢的更新吧。
+作用域的变化let1. 引入块级作用域，let产生产生暂时性死区，取消变量提升。阮一峰老师的教程中举了一个for循环的中用var定义的循环变量导致泄漏为全局变量的问题。
+1234567var arr = [];var(var i = 0; i &lt; 1
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2018-04-20 23:03" pubdate>
+              2018-04-20
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/CSS/">CSS</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/CSS/">CSS</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2018/04/17/%E5%9D%97%E7%BA%A7%E6%A0%BC%E5%BC%8F%E5%8C%96%E4%B8%8A%E4%B8%8B%E6%96%87/">块级格式化上下文</a>
       </h1>
 
@@ -403,10 +453,10 @@ Quick
           
             
           
-          格式化上下文1在解决外边距叠加的时候，MDN给出了这个概念，触发 了BFC不会发生外边距叠加，今天来看一下，说实话，我理解不是特别深刻，今天通过查阅资料，希望解决这个问题。
+          格式化上下文在解决外边距叠加的时候，MDN给出了这个概念，触发 了BFC不会发生外边距叠加，今天来看一下，理解不是特别深刻，今天通过查阅资料，解决这个问题。
 MDN的定义
-1块级格式化上下文（Block Formatting Context，BFC） 是Web页面的可视化CSS渲染的一部分，是布局过程中生成块级盒子的区域，也是浮动元素与其他元素的交互限定区域。
-看了几个文档都没有太
+块级格式化上下文（Block Formatting Context，BFC） 是Web页面的可视化CSS渲染的一部分，是布局过程中生成块级盒子的区域，也是浮动元素与其他元素的交互限定区域。
+看了几个文档都没有太看明白，借鉴：前端
         </a>
       </p>
 

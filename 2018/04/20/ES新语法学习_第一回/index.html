@@ -1,0 +1,478 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  <title>外边距叠加的相关问题 - Askwuxue</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Askwuxue</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="外边距叠加的相关问题">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2018-04-20 23:03" pubdate>
+        2018年4月20日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.6k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      18
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">外边距叠加的相关问题</h1>
+            
+            <div class="markdown-body">
+              <p><em>随着学习的深入，真的发现<code>ECMAScript5</code>留下了蛮多坑的，还好，标准不断的更新，语言也会越来越好，简单看一下ES6新的语法，慢慢的更新吧。</em></p>
+<h5 id="作用域的变化"><a href="#作用域的变化" class="headerlink" title="作用域的变化"></a>作用域的变化</h5><p><strong>let</strong><br><em>1. 引入块级作用域，let产生产生暂时性死区，取消变量提升。</em><br>阮一峰老师的教程中举了一个<code>for</code>循环的中用<code>var</code>定义的循环变量导致泄漏为全局变量的问题。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> arr = [];<br><span class="hljs-function"><span class="hljs-title">var</span>(<span class="hljs-params"><span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; i++</span>)</span> &#123;<br>	arr[i] = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;<br>	<span class="hljs-built_in">console</span>.log(i);<br>	&#125;<br>&#125;<br><span class="hljs-built_in">console</span>.log(arr[<span class="hljs-number">5</span>]); <span class="hljs-comment">// 10</span><br></code></pre></td></tr></table></figure>
+<p>  我记得以前我大致遇到过同样的问题，但是并不知道是为什么，后来看了阮一峰老师的ES6，瞬间明白。<code>var</code>声明的循环变量，其实是一个全局变量。在循环体内部，输出<code>i</code>的值是没有问题的。但是除了循环体，这时候全局变量<code>i</code>的值已经是10了。其实是一个变量泄露为全局变量的问题。<br>  使用<code>let</code>声明的循环变量，是属于块级作用域的。不会泄露为全局变量，所以使用<code>let</code>声明，最后输出的结果是6。</p>
+<p><em>2. 没有预解析，必须先声明使用，同一个作用域不能重复定义。</em></p>
+<p><strong><code>const</code>常量</strong><br>  <code>const</code>声明一个常量，实际不是一个变量的值不变，而是指向那个变量的内存地址不变。其实主要是约束引用类型的。<br>  对于对象来讲，<code>const</code>约束了对象的内存地址不可变，也就是一个变量被声明，不能被重新赋值，这里的不能被重新赋值指的是，你不能对该变量的内存地址进行修改。如下</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> obj = &#123;&#125;;<br>	obj = &#123;&#125;;<br></code></pre></td></tr></table></figure>
+<p>  当一个变量被使用<code>const</code>声明，该变量的内存地址不可变，接下来，用另一个对象进行赋值（本质是把另一个对象的地址给<code>obj</code>变量）是不允许的。<br>对象是存在堆中的，如果直接对象本身修改是可以的。如下</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs javascript">obj.a = <span class="hljs-string">&#x27;xxx&#x27;</span>;<br></code></pre></td></tr></table></figure>
+<p>  如果想要一个对象真的不可修改，可以使用<code>Objec.freeze()</code>这个方法，对象将会被冻结，关于该对象的一切都不可修改。包括该对象的原型。语法如下,<code>return</code>: 被冻结的对象。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-built_in">Object</span>.freeze(对象)<br></code></pre></td></tr></table></figure>
+
+<h5 id="解构赋值"><a href="#解构赋值" class="headerlink" title="解构赋值"></a>解构赋值</h5><p><em>结构赋值的本质是模式匹配，只要等号两边的模式相同，左边的变量就会被赋予对应的值。没有被赋值到的值默认是<code>undefined</code></em></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">// 1. 基本语法</span><br><span class="hljs-keyword">let</span> [a, b, c] = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>];<br><span class="hljs-comment">// 2. 对象结构赋值</span><br><span class="hljs-keyword">let</span> json = &#123;<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;wuxue&quot;</span>, <span class="hljs-string">&quot;age&quot;</span>: <span class="hljs-number">20</span>&#125;<br><span class="hljs-keyword">let</span> &#123;<span class="hljs-attr">name</span>:n, <span class="hljs-attr">age</span>:a&#125; = json;<br><span class="hljs-comment">// 应用：交换两数，接受后台数据</span><br></code></pre></td></tr></table></figure>
+<h5 id="字符串的查找"><a href="#字符串的查找" class="headerlink" title="字符串的查找"></a>字符串的查找</h5><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">// str是否包含某字符串 返回的是boolean</span><br><span class="hljs-number">1.</span> str.includes(substr)<br><span class="hljs-comment">// 返回的是索引的位置</span><br><span class="hljs-number">2.</span> str.indexOf(substr)<br><span class="hljs-comment">// 判断是否是某字符串开头/结束。返回值为Boolean</span><br><span class="hljs-number">3.</span> str.startsWith(<span class="hljs-string">&#x27;substr&#x27;</span>)/str.endsWith(<span class="hljs-string">&#x27;substr&#x27;</span>)<br><span class="hljs-comment">// 重复谋和某个字符串，n 重复的次数，返回重复后的string</span><br><span class="hljs-number">4.</span> str.repeat(n);<br><span class="hljs-comment">// 在字符串的头部填充字符串</span><br><span class="hljs-comment">// 如果规定的字符串的长度超出了，填充的字符串会被自动截取</span><br><span class="hljs-number">5.</span> str.padStart(targetLength, padString)<br><span class="hljs-number">6.</span> str.padEnd(padString, padString);<br></code></pre></td></tr></table></figure>
+<h5 id="ES6新增的数组方法"><a href="#ES6新增的数组方法" class="headerlink" title="ES6新增的数组方法"></a>ES6新增的数组方法</h5><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">// 第一个参数是回调函数  第二个参数是this指向</span><br><span class="hljs-comment">// 回调函数参数分别为 value(当前值)、index(当前索引)、arr(指向当前调用的arr)</span><br><span class="hljs-comment">// 箭头函数的话，无法改变this指向</span><br><br><span class="hljs-comment">// 加强的for循环</span><br><span class="hljs-number">1.</span> arr.forEach()<br>	callback(value,index,arr);<br><span class="hljs-comment">// 正常情况需要配合return 如果没有return 功能相当于foreach 返回值是一个数组，	将元素组项变换</span><br><span class="hljs-comment">// 注意：只要是用map 一定要有return 语句</span><br><br><span class="hljs-number">2.</span> arr.map()<br>    callback(item,index,arr);<br><br><span class="hljs-comment">//  如果filter 的回调函数 是true的项留下</span><br><span class="hljs-number">3.</span> arr.filter()<br>    <span class="hljs-function"><span class="hljs-title">callback</span>(<span class="hljs-params">item,index,arr</span>)</span> &#123;<br>        <span class="hljs-keyword">return</span> condition;<br>    &#125;；<br><br><span class="hljs-comment">// 某些项满足条件</span><br><span class="hljs-number">4.</span> arr.some()<br><br><span class="hljs-comment">// 每一项满足条件</span><br><span class="hljs-number">5.</span> arr.every()<br>    <span class="hljs-function"><span class="hljs-title">callback</span>(<span class="hljs-params">item,index,arr</span>)</span> &#123;<br>        <span class="hljs-keyword">return</span> condition;<br>    &#125;<br><span class="hljs-comment">// 默认prev指arr[0] cur为arr[1]</span><br><span class="hljs-number">6.</span> arr.reduce()<br>    <span class="hljs-function"><span class="hljs-title">callback</span>(<span class="hljs-params">prev,cur,index,arr</span>)</span>&#123;<br>        <span class="hljs-keyword">return</span> prev + cur;<br>    &#125;<br><br><span class="hljs-comment">// 从arr的右边向左边</span><br><span class="hljs-number">7.</span> arr.reduceRight();<br></code></pre></td></tr></table></figure>
+<h5 id="新增的对象方法"><a href="#新增的对象方法" class="headerlink" title="新增的对象方法"></a>新增的对象方法</h5><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs javascript">简写写法<br><span class="hljs-number">1.</span> 属性值和属性一样时,可以只写其中一个<br><span class="hljs-comment">// 比较两个值是否相等 可以用来判断两个对象的是否有同一个引用</span><br><span class="hljs-number">2.</span> <span class="hljs-built_in">Object</span>.is(a, b);<br><span class="hljs-comment">// Object.is(NaN,NaN)	true</span><br><span class="hljs-comment">// Object.is(+0,-0)	false</span><br><span class="hljs-comment">// 用来合并对象/复制	复制数组/合并 后面的对象中的一致的会覆盖前面的</span><br><span class="hljs-number">5.</span> <span class="hljs-built_in">Object</span>.assign(target，souse1，souse2...)<br></code></pre></td></tr></table></figure>
+<h5 id="函数的新变化"><a href="#函数的新变化" class="headerlink" title="函数的新变化"></a>函数的新变化</h5><ol>
+<li><p>可以有默认参数,参数可以解构</p>
+</li>
+<li><p>函数的参数默认是已经定义的，不能在函数中重复定义</p>
+</li>
+<li><p>拓展运算符,reset运算符  <code>...</code>展开数组  在函数参数中用拓展运算符接受多余参数  </p>
+</li>
+<li><p>箭头函数<code>let funName = (params)=&gt; &#123;&#125;</code>; 如果只有一个<code>return</code>语句,大括号省略,<code> return</code>省略</p>
+</li>
+<li><p>箭头函数中的<code>this</code>是定义函数的时候所在的对象，不再是运行时所在对象。</p>
+</li>
+<li><p>箭头函数中没有<code>arguments</code></p>
+</li>
+<li><p>箭头函数不能当成构造函数</p>
+</li>
+</ol>
+<h5 id="新增的数据结构"><a href="#新增的数据结构" class="headerlink" title="新增的数据结构"></a>新增的数据结构</h5><p><strong>1. Set数据结构</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">//会将重复的值过滤掉,具有唯一性</span><br><span class="hljs-keyword">let</span> sets = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Set</span>([<span class="hljs-string">&#x27;a&#x27;</span>,<span class="hljs-string">&#x27;b&#x27;</span>,<span class="hljs-string">&#x27;c&#x27;</span>]);<br>sets.add(<span class="hljs-string">&#x27;d&#x27;</span>);		<span class="hljs-comment">// 添加一个元素</span><br>sets.delete(<span class="hljs-string">&#x27;d&#x27;</span>);	<span class="hljs-comment">// 删除一个元素</span><br>sets.has(<span class="hljs-string">&#x27;d&#x27;</span>);		<span class="hljs-comment">// false</span><br>sets.size			<span class="hljs-comment">// 3 查看个数</span><br>sets.clear()		<span class="hljs-comment">// 清除所有</span><br><br><span class="hljs-comment">// 返回一个新的迭代器对象，该对象包含Set对象中的按插入顺序排列的所有元素的值</span><br>set.value();<br><span class="hljs-comment">// 与values()方法相同，返回一个新的迭代器对象，该对象包含Set对象中的按插入顺序排列的所有元素的值。</span><br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> item <span class="hljs-keyword">of</span> sets.keys()) &#123;<br>    <span class="hljs-built_in">console</span>.log(item);<br>&#125;<br><span class="hljs-comment">// 返回一个新的迭代器对象，该对象包含Set对象中的按插入顺序排列的所有元素的值的[value, value]数组。</span><br><span class="hljs-comment">// 为了使这个方法和Map对象保持相似， 每个值的键和值相等。</span><br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> [k,v] <span class="hljs-keyword">of</span> sets.entries())<br><br>sets.forEach(<span class="hljs-function">(<span class="hljs-params">value,index</span>) =&gt;</span> &#123;&#125;)<br></code></pre></td></tr></table></figure>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/CSS/">CSS</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/CSS/">CSS</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/02/07/hello-world/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Hello World</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2018/04/17/%E5%9D%97%E7%BA%A7%E6%A0%BC%E5%BC%8F%E5%8C%96%E4%B8%8A%E4%B8%8B%E6%96%87/">
+                        <span class="hidden-mobile">块级格式化上下文</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      var inputArea = document.querySelector("#local-search-input");
+      inputArea.onclick = function () {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        this.onclick = null
+      }
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>
