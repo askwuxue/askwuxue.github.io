@@ -25,6 +25,12 @@
     
     
     
+    <tags>
+      
+      <tag>测试三</tag>
+      
+    </tags>
+    
   </entry>
   
   
@@ -38,6 +44,12 @@
     
     
     
+    <tags>
+      
+      <tag>测试2</tag>
+      
+    </tags>
+    
   </entry>
   
   
@@ -50,6 +62,12 @@
     <content type="html"><![CDATA[]]></content>
     
     
+    
+    <tags>
+      
+      <tag>测试1</tag>
+      
+    </tags>
     
   </entry>
   
