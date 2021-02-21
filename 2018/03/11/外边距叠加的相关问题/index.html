@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
-  <title>Hello World - Askwuxue</title>
+  <title>外边距叠加的相关问题 - Askwuxue</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
 
@@ -162,7 +162,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="Hello World">
+            <span class="h2" id="subtitle" title="外边距叠加的相关问题">
               
             </span>
 
@@ -172,8 +172,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-02-07 23:43" pubdate>
-        2021年2月7日 晚上
+      <time datetime="2018-03-11 21:23" pubdate>
+        2018年3月11日 晚上
       </time>
     </span>
   
@@ -184,7 +184,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      75 字
+      850 字
     </span>
   
 
@@ -194,7 +194,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1
+      8
        分钟
     </span>
   
@@ -224,24 +224,43 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Hello World</h1>
+            <h1 style="display: none">外边距叠加的相关问题</h1>
             
             <div class="markdown-body">
-              <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo new <span class="hljs-string">&quot;My New Post&quot;</span><br></code></pre></td></tr></table></figure>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo server<br></code></pre></td></tr></table></figure>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo generate<br></code></pre></td></tr></table></figure>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo deploy<br></code></pre></td></tr></table></figure>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+              <h4 id="外边距叠加的问题"><a href="#外边距叠加的问题" class="headerlink" title="外边距叠加的问题"></a>外边距叠加的问题</h4><p>外边距叠加是一个简单的概念：在CSS中，两个或多个（特殊情况：一个）毗邻的普通流中的盒子（可能是父子元素，也可能是兄弟元素）在垂直方向上的外边距会发生叠加，这种形成的外边距称之为外边距叠加。</p>
+<p><strong>关键词</strong>: 两个或者多个，盒子（块级元素），毗邻，普通流，垂直方向</p>
+<p><strong>注意<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/float">浮动元素</a>和<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/position#absolute">绝对定位元素</a>的外边距不会折叠（因为这里触发了 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/Guide/CSS/Block_formatting_context">块格式化上下文 Block Formatting Context， BFC</a>）。</strong></p>
+<p>1）第一种情况：兄弟元素之间，在垂直方向上发生了外边距叠加</p>
+<p><img src="img/%E5%A4%96%E8%BE%B9%E8%B7%9D%E5%8F%A0%E5%8A%A0.png" srcset="/img/loading.gif" alt="兄弟元素间"></p>
+<p>2）第二种情况 当父子元素之间的margin-top或者margin-bottom没有被border，padding隔开的时候，他们的内外边距会发生叠加。</p>
+<p><img src="img/%E5%A4%96%E8%BE%B9%E8%B7%9D%E5%8F%A0%E5%8A%A02.png" srcset="/img/loading.gif" alt="f父子元素间"></p>
+<p>3）第三种情况，单个的块级元素中不包含任何内容，并且在其 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/margin-top"><code>margin-top</code></a> 与 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/margin-bottom"><code>margin-bottom</code></a> 之间没有边框、内边距、行内内容、<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/height"><code>height</code></a>、<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/min-height"><code>min-height</code></a> 将两者分开，则该元素的上下外边距会折叠。</p>
+<p><img src="img/%E5%A4%96%E8%BE%B9%E8%B7%9D%E5%8F%A0%E5%8A%A03.png" srcset="/img/loading.gif" alt="单个块级元素"></p>
+<p><strong>注意</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">1) 即使某一外边距为0，这些规则仍然适用。因此就算父元素的外边距是0，第一个或最后一个子元素的外边距仍然会“溢出”到父元素的外面。<br>2) 如果参与折叠的外边距中包含负值，折叠后的外边距的值为最大的正边距与最小的负边距（即绝对值最大的负边距）的和。<br>3) 如果所有参与折叠的外边距都为负，折叠后的外边距的值为最小的负边距的值。这一规则适用于相邻元素和嵌套元素。<br></code></pre></td></tr></table></figure>
+<h5 id="外边距叠加的影响"><a href="#外边距叠加的影响" class="headerlink" title="外边距叠加的影响"></a>外边距叠加的影响</h5><p>​    外边距叠加的影响不一一列举，常见的就是想要实现子元素的margin-top等效果，结果发现父盒子也被加上了margin-top，从而影响了父盒子的位置。遇到类似问题，能够想到是因为外边距合并导致的就可以了。当然，外边距叠加并不一定都是负面的影响，如下图，也有正面的影响。在文字排版的时候，利用外边距合并，实现了段落之间相同宽度的效果。在没有想到更好的解决方案之前，这可以作为一个备选方案。<br><img src="img/%E5%A4%96%E8%BE%B9%E8%B7%9D%E5%8F%A0%E5%8A%A04.png" srcset="/img/loading.gif" alt="外边距合并的正面影响"></p>
+<h5 id="如何消除外边距叠加"><a href="#如何消除外边距叠加" class="headerlink" title="如何消除外边距叠加"></a>如何消除外边距叠加</h5><figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs scss">从外边距叠加入手，就可以解决这个问题。<br>1）如果两个元素上下毗邻，分别设置外边距的时候考虑一下，如果必须设置，考虑利用浮动或者绝对定位是否能解决。<br>2）当嵌套块级元素的时候，看看时候能为他们设置<span class="hljs-attribute">padding</span>或者<span class="hljs-attribute">border</span>来破坏外边距叠加的条件<br>3）不要为一个空元素设置上下边距，应该没有人会这么干。<br>4）inline-block 元素和其他任何元素之间不发生外边距叠加，也包括它的子元素<br>5）创建了 BFC 的元素不会和它的子元素发生外边距叠加，不同的BFC中，不会发生外边距叠加<br></code></pre></td></tr></table></figure>
+<p>如有不正之处，欢迎指正。随着学习的深入，可能会进一步的对BFC的原理等进行输出。</p>
 
             </div>
             <hr>
             <div>
               <div class="post-metas mb-3">
                 
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/CSS/">CSS</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/CSS/">CSS</a>
+                    
+                  </div>
                 
               </div>
               
@@ -252,21 +271,15 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/02/07/test/">
+                      <a href="/2021/02/07/hello-world/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">test</span>
+                        <span class="hidden-mobile">Hello World</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </article>
                   <article class="post-next col-6">
                     
-                    
-                      <a href="/2018/03/11/%E5%A4%96%E8%BE%B9%E8%B7%9D%E5%8F%A0%E5%8A%A0%E7%9A%84%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/">
-                        <span class="hidden-mobile">外边距叠加的相关问题</span>
-                        <span class="visible-mobile">下一篇</span>
-                        <i class="iconfont icon-arrowright"></i>
-                      </a>
                     
                   </article>
                 </div>
