@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
-  <title>Git命令 - Askwuxue</title>
+  <title>外边距叠加的相关问题 - Askwuxue</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
 
@@ -162,7 +162,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="Git命令">
+            <span class="h2" id="subtitle" title="外边距叠加的相关问题">
               
             </span>
 
@@ -172,8 +172,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2018-12-04 21:16" pubdate>
-        2018年12月4日 晚上
+      <time datetime="2021-03-16 23:07" pubdate>
+        2021年3月16日 晚上
       </time>
     </span>
   
@@ -184,7 +184,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      589 字
+      670 字
     </span>
   
 
@@ -194,7 +194,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      6
+      8
        分钟
     </span>
   
@@ -224,43 +224,19 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Git命令</h1>
+            <h1 style="display: none">外边距叠加的相关问题</h1>
             
             <div class="markdown-body">
-              <p><em>Git是一个版本控制系统，已经成为程序员必备的，必会的的工作软件。还没有入门的小伙伴，推荐大家学习廖雪峰老师的<a target="_blank" rel="noopener" href="https://www.liaoxuefeng.com/wiki/896043488029600">Git教程</a>，该教程非常适合新入门的同学学习，通俗易懂。因为基础的概念已经清楚了，但是对于常用的命令还没有很熟练，做一个常用命令的整理</em></p>
-<h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><ol>
-<li><p>添加远程仓库(本质就是为远程仓库添加一个别名，方便以后操作)</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs git">git remote add origin(仓库别名) (git@github.com:askwuxue&#x2F;Users.git)远程仓库地址<br></code></pre></td></tr></table></figure></li>
-<li><p>查看远程仓库</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs git">git remote -v <br></code></pre></td></tr></table></figure></li>
-<li><p>删除远程仓库</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs git">git remote rm origin<br></code></pre></td></tr></table></figure></li>
-<li><p>新建并切换分支</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs git">git checkout -b dev(新分支名)<br></code></pre></td></tr></table></figure></li>
-<li><p>切换分支分支</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs git">git branch dev(要切换的分支名)<br></code></pre></td></tr></table></figure></li>
-<li><p>删除分支</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs git">git branch -d dev(要删除的分支名)<br></code></pre></td></tr></table></figure></li>
-<li><p>查看所有标签</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs git">git tag<br></code></pre></td></tr></table></figure></li>
-<li><p>查看某标签</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs git">git show &lt;tagName&gt;<br></code></pre></td></tr></table></figure></li>
-<li><p>新建标签</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs git">git tag &lt;tagName&gt; &lt;commitId&gt;<br></code></pre></td></tr></table></figure></li>
-<li><p>新建标签并添加描述</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gut">git tag -a &lt;tagName&gt; -m &quot;tag message&quot; &lt;commitId&gt;<br></code></pre></td></tr></table></figure></li>
-<li><p>推送至远程库</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs git">&#x2F;&#x2F; 将分支内容推送至远程库，远程库就是github仓库地址的别名。-u是记住本次的对应关系，后续可直接使用 git push<br>git push -u origin(远程仓库) master(本地分支)<br></code></pre></td></tr></table></figure>
-<h3 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h3></li>
-<li><p>解决冲突<br><em>冲突产生：一个文件，没有在同一个版本的基础上顺序修改就产生了冲突。如：A,B 拿了同一个版本的文件进行编辑，A编辑好了，并且push了。B随后编辑好了，也要push。但是这个时候A已经进行过编辑，B又编辑，就产生了冲突。本质是没有拿同一个版本的文件进行编辑。所以在正常情况下，最好拿最新版本进行编辑，可以有效避免冲突。如果冲突已经产生，课按照下面的方式进行处理</em></p>
-</li>
-<li><p>1 手动解决冲突，在merge的时候，Git会告诉我们有冲突，如下<br><img src="/img/Git/conflict.png" srcset="/img/loading.gif" alt="conflict"></p>
-<p>Git 告诉我们有冲突，需要我们手动进行合并。合并后如下</p>
-<p><img src="/img/Git/resolve_conflict.png" srcset="/img/loading.gif" alt="resolve conflict"></p>
-</li>
-</ol>
-<p>手动合并结束，接下来，只需要像处理普通文件<code>git add</code>，<code>git commit</code>进行处理即可，至此，冲突解决完毕。</p>
-
+              <h3 id="使用Ajax结合FormData实现文件上传"><a href="#使用Ajax结合FormData实现文件上传" class="headerlink" title="使用Ajax结合FormData实现文件上传"></a>使用Ajax结合FormData实现文件上传</h3><p><em>使用FormData之前，我们需要知道它的作用，或者说是本质吧。FormData本质上是HTML提供的一个对象，可以模拟HTML表单，相当于将HTML表单映射成表单对象，自动将表单对象中的数据拼接成请求参数的格式。说白了就是一个对象来代替正常的FORM表单提交，但是有比表单更强大。</em></p>
+<h4 id="1-FormData使用方法"><a href="#1-FormData使用方法" class="headerlink" title="1 FormData使用方法"></a>1 FormData使用方法</h4><h5 id="1-1-创建一个表单对象"><a href="#1-1-创建一个表单对象" class="headerlink" title="1.1 创建一个表单对象"></a>1.1 创建一个表单对象</h5><p>因为FormData对象不能脱离form使用，所以我们必须现有一个表单。</p>
+<p><strong>注意：创建表单，表单中的元素，如input标签等，必须用name属性，因为FormData对象是根据name属性来获得对应的值，或者是操作对应的值的。下文会有详细介绍</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;form&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;form&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;username&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;password&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;password&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<h5 id="1-2-创建一个FormData实例，将表单转化为FormData对象"><a href="#1-2-创建一个FormData实例，将表单转化为FormData对象" class="headerlink" title="1.2 创建一个FormData实例，将表单转化为FormData对象"></a>1.2 创建一个FormData实例，将表单转化为FormData对象</h5><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs ts"><span class="hljs-comment">// 使用FormData构造函数创建一个实例，注意该构造函数接受一个参数，参数必须是一个表单对象。如下：</span><br><span class="hljs-comment">// 获得表单</span><br><span class="hljs-number">1.</span> <span class="hljs-keyword">let</span> form = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">&#x27;form&#x27;</span>);<br><span class="hljs-comment">// 将表单转化为Form对象，此时，FormData其实就是包含了表单form内容的一个对象。具体的形式为&#123;key, value&#125;的形式，key就是form表单的name属性值，所以form中的控件必须有name属性。</span><br><span class="hljs-number">2.</span> <span class="hljs-keyword">let</span> formData = <span class="hljs-keyword">new</span> FormData(form);<br></code></pre></td></tr></table></figure>
+<p><strong>注意: 完成了如上步骤后，如果此时你在开发者工具尝试输出FormData对象，输出的为一个空对象，因为FormData是一种特殊格式，无法输出。</strong></p>
+<h5 id="1-3-使用Ajax发送FormData"><a href="#1-3-使用Ajax发送FormData" class="headerlink" title="1.3 使用Ajax发送FormData"></a>1.3 使用Ajax发送FormData</h5><p><strong>创建好的FormData对象，使用<code>Ajax</code>中的<code>send()</code>进行发送，FormData对象只能使用<code>send()</code>进行发送，不能使用<code>get</code>请求的<code>url</code>拼接参数的方式。</strong><br>如下，客户端使用Ajax进行了一次post请求。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs ts"><span class="hljs-keyword">let</span> xhr = <span class="hljs-keyword">new</span> XMLHttpRequest();<br><br>xhr.open(<span class="hljs-string">&#x27;POST&#x27;</span>, <span class="hljs-string">&#x27;http://localhost:3000/FormData&#x27;</span>);<br><br><span class="hljs-comment">// FormData是一种特殊的格式，所以在控制台中输出为空</span><br><span class="hljs-comment">// TODO 对于FormData对象，不能设置常规的Content-Type</span><br><span class="hljs-comment">// xhr.setRequestHeader(&#x27;Content-Type&#x27;, &#x27;application/x-www-form-urlencoded&#x27;);</span><br><br>xhr.send(formData);<br><br>xhr.onload = <span class="hljs-function">() =&gt;</span> &#123;<br>	<span class="hljs-built_in">console</span>.log(xhr.responseText);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>Node服务端进行响应（使用express框架，formidable第三方包）</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs ts"><span class="hljs-comment">// 路由</span><br>app.post(<span class="hljs-string">&#x27;/FormData&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">req, res, next</span>) =&gt;</span> &#123;<br>	<span class="hljs-comment">// form 使用formidable的一个实例，用来接受处理FormData的请求，fields参数是FormData的内容。</span><br>    form.parse(req, <span class="hljs-function">(<span class="hljs-params">err, fields, files</span>) =&gt;</span> &#123;<br>    	<span class="hljs-built_in">console</span>.log(fields)    <span class="hljs-comment">//&#123;&quot;username&quot;:&quot;123&quot;,&quot;password&quot;:&quot;123&quot;&#125;</span><br>        <span class="hljs-comment">// 返回结果给客户端</span><br>        res.send(fields);<br>        next();<br>    &#125;)<br>&#125;)<br></code></pre></td></tr></table></figure>
             </div>
             <hr>
             <div>
@@ -269,7 +245,7 @@
                   <div class="post-meta mr-3">
                     <i class="iconfont icon-category"></i>
                     
-                      <a class="hover-with-bg" href="/categories/Git/">Git</a>
+                      <a class="hover-with-bg" href="/categories/Node/">Node</a>
                     
                   </div>
                 
@@ -277,7 +253,7 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/Git/">Git</a>
+                      <a class="hover-with-bg" href="/tags/Node/">Node</a>
                     
                   </div>
                 
@@ -290,18 +266,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/03/16/%E5%88%A9%E7%94%A8FormData%E5%AE%9E%E7%8E%B0%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">外边距叠加的相关问题</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2018/11/02/%E6%88%91%E4%BB%AC%E7%9C%9F%E7%9A%84%E4%BC%9A%E4%BD%BF%E7%94%A8JavaScript%E4%B8%AD%E7%9A%84%E5%BE%AA%E7%8E%AF%E5%90%97/">
-                        <span class="hidden-mobile">你会正确的使用JavaScript中的循环吗</span>
+                      <a href="/2018/12/04/Git%E5%85%A5%E9%97%A8%E4%B8%8E%E5%91%BD%E4%BB%A4/">
+                        <span class="hidden-mobile">Git命令</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
