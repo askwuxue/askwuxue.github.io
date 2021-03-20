@@ -194,7 +194,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      15
+      14
        分钟
     </span>
   
@@ -230,11 +230,11 @@
               <h3 id="闭包到底什么"><a href="#闭包到底什么" class="headerlink" title="闭包到底什么"></a>闭包到底什么</h3><h4 id="1-定义"><a href="#1-定义" class="headerlink" title="1. 定义"></a>1. 定义</h4><blockquote>
 <p>JavaScript高级程序语言设计: <em>闭包是指有权访问另一个函数作用域中变量的函数</em><br>根据这个定义，我们去分析<br><strong>闭包是什么？</strong> <code>一个函数</code><br><strong>闭包是什么函数？</strong><code>一个可以访问其他函数作用域中变量的函数</code><br>我们仔细分析其中的关键字，<code>函数</code>、<code>作用域</code>、<code>变量</code></p>
 </blockquote>
-<h5 id="1-1-深入分析函数"><a href="#1-1-深入分析函数" class="headerlink" title="1.1 深入分析函数"></a>1.1 深入分析函数</h5><p>  <code>JavaScript</code>在ES6前是没有块级作用域的。但是有函数作用域，类似块级作用域，在函数内部使用<code>var</code>关键字声明一个变量。<strong>直接</strong>在函数外部访问函数内部的变量是访问不到的。<br><strong>注意: 函数内部的变量必须使用var关键字声明，如果不使用var关键字声明。在函数外部是可以直接使用这个变量的，因为这时，函数内部的这个变量是全局变量。如下，在函数内部有一个局部变量和一个全局变量</strong></p>
+<h5 id="1-1-深入分析函数"><a href="#1-1-深入分析函数" class="headerlink" title="1.1 深入分析函数"></a>1.1 深入分析函数</h5><p>  <code>JavaScript</code>在<code>ES6</code>前是没有块级作用域的。但是有函数作用域，类似块级作用域，在函数内部使用<code>var</code>关键字声明一个变量。<strong>直接</strong>在函数外部访问函数内部的变量是访问不到的。<br><strong>注意: 函数内部的变量必须使用<code>var</code>关键字声明，如果不使用var关键字声明。在函数外部是可以直接使用这个变量的，因为这时，函数内部的这个变量是全局变量。如下，在函数内部有一个局部变量和一个全局变量</strong></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fun</span>(<span class="hljs-params"></span>) </span>&#123;<br>	<span class="hljs-keyword">var</span> a = <span class="hljs-number">1</span>;	<span class="hljs-comment">// 局部变量</span><br>	b = <span class="hljs-number">2</span>;		<span class="hljs-comment">// 全局变量</span><br>&#125;<br></code></pre></td></tr></table></figure>
-<p>上面说到，在函数外部不能直接访问函数内的局部变量。反过来不然，在函数内部，是可以访问到全局变量的。这个时候需要简单涉及到作用域的相关知识。</p>
+<p>上面说到，在函数外部不能直接访问函数内的局部变量。反过来不然，在函数内部，是可以访问到全局变量的。这个时候需要涉及到作用域的相关知识。</p>
 <h6 id="1-1-1-作用域"><a href="#1-1-1-作用域" class="headerlink" title="1.1.1 作用域"></a>1.1.1 作用域</h6><blockquote>
-<p><em>作用域是在运行时代码中的某些特定部分中变量，函数和对象的可访问性</em><br>  简单来说，作用域就是你到底能不能访问到某些变量，函数，对象等。定义在全局上的，都是可以访问的。为什么呢？举个列子，全局可以理解称为一个所有人都可以访问的仓库，你需要一个东西，不需要和任何人打招呼你就可以进行拿，没人管你。<br>  如果你有自己的家，你需要什么，根据就近原则，先在自己的家里找，找不到了。你可能才会向东西更多，更全的地方去找。类似于很多个同心圆，总是从最内层一直向外扩散的感觉。<br>  函数作用域，相当于和你没有交集的人家，是不会允许你平白无故去人家的家里拿东西。即使人家的家里有这件东西。请看</p>
+<p><em>作用域是在运行时代码中的某些特定部分中变量，函数和对象的可访问性</em><br>  简单来说，作用域就是你到底能不能访问到某些变量，函数，对象等。定义在全局上的，都是可以访问的。为什么呢？举个列子，全局可以理解称为一个所有人都可以访问的仓库，你需要一个东西，不需要和任何人打招呼你就可以进行拿，没人管你。<br>  如果你有自己的家，你需要什么，根据就近原则，先在自己的家里找，找不到了。你才会向东西更多，更全的地方去找。类似于很多个同心圆，总是从最内层一直向外扩散的感觉。<br>  函数作用域，相当于和你没有交集的人家，是不会允许你平白无故去人家的家里拿东西。即便人家的家里有这件东西。请看</p>
 </blockquote>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> b = <span class="hljs-number">1</span>;<br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">father</span>(<span class="hljs-params"></span>) </span>&#123;<br>	<span class="hljs-keyword">var</span> b = <span class="hljs-number">2</span>;<br>	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">son</span>(<span class="hljs-params"></span>) </span>&#123;<br>		<span class="hljs-built_in">console</span>.log(b);   <span class="hljs-comment">// 2</span><br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 <p><strong>** 作用域链</strong><br>  上面这段伪代码，<code>son()</code>函数要访问<code>b</code>变量，但是<code>son</code>函数内部没有b变量。就会向上面找，为什么向上面找，因为<code>son</code>函数是在<code>father</code>函数内部的，它们存在包含关系。<code>son</code>函数可以向上寻找。找到了<code>b</code>变量，取到了值。就不会继续找了。假如，<code>father</code>函数内部没有<code>b</code>变量呢？那么就会在<code>father</code>函数的上一层找，<code>father</code>的上一层是全局变量，全局变量中定义了<code>b</code>变量，所以也可以找到，只不过这个时候的<code>b</code>的值为1。这样一层层向上寻找的过程就形成了一条作用域链。</p>
