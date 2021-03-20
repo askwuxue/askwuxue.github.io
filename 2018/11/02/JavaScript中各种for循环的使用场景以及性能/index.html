@@ -184,7 +184,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1k 字
+      1.1k 字
     </span>
   
 
@@ -194,7 +194,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      12
+      14
        分钟
     </span>
   
@@ -252,6 +252,9 @@
 <p><code>for in</code> 以任意顺序遍历一个对象的除了Symbol以外的可枚举属性，会遍历原型上的属性。因为，最好不要在数组中使用，一般遍历数组，我们都希望按照索引输出。<code>for in </code>会在意料之外</p>
 <p><strong>2.3 ``for of</strong></p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs ts"><span class="hljs-keyword">for</span> (variable <span class="hljs-keyword">of</span> iterable) &#123;<br>    <span class="hljs-comment">//statements</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>for…of语句在可迭代对象（包括 Array，Map，Set，String，TypedArray，arguments 对象等等）上创建一个迭代循环，调用自定义迭代钩子，并为每个不同属性的值执行语句</p>
+<p><strong><code>for of </code>只在可迭代的对象上才可以执行，普通对象不是一个可迭代对象，所以不可以使用<code>for of</code></strong></p>
+<p><strong>根据<code>for循环</code>，<code>for in循环</code>，<code>for of循环</code>，<code>forEach循环</code>的不同的特性，在不同的场景，选择最合适的方式才是最优解。</strong></p>
 
             </div>
             <hr>
