@@ -29,6 +29,31 @@
   
   
   <entry>
+    <title>闭包到底是什么</title>
+    <link href="/2019/01/10/%E8%B7%A8%E5%9F%9F%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/"/>
+    <url>/2019/01/10/%E8%B7%A8%E5%9F%9F%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/</url>
+    
+    <content type="html"><![CDATA[<h3 id="跨域方案解决"><a href="#跨域方案解决" class="headerlink" title="跨域方案解决"></a>跨域方案解决</h3><p><em><code>ajax</code>的出现，推动了web的发展。随之，为了防止恶意文档，减少被攻击的可能。浏览器制定了同源安全策略</em></p><h4 id="1-同源安全策略是什么？"><a href="#1-同源安全策略是什么？" class="headerlink" title="1. 同源安全策略是什么？"></a>1. 同源安全策略是什么？</h4><p><strong>很简单，接着看！</strong></p><h5 id="1-1-什么是同源"><a href="#1-1-什么是同源" class="headerlink" title="1.1 什么是同源"></a>1.1 什么是同源</h5><p><strong>同源就是比较两个<code>URL</code>地址，当他们满足一定的条件，他们是同源的。</strong><br><strong>同时满足下面三个条件就是同源</strong></p><ul><li>协议相同</li><li>主机相同</li><li>端口相同</li></ul><p>看个例子</p><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs http">https://www.baidu.com/s?ie=UTF-8&amp;wd=a<br>// 协议 https<br>// 主机 www.baidu.com<br>// 端口 默认端口为80所以没有显示。<br></code></pre></td></tr></table></figure><p><strong>练习</strong><br>下表给出了与 URL <a href="http://store.company.com/dir/page.html">http://store.company.com/dir/page.html</a> 的源进行对比的示例:</p><table><thead><tr><th><strong>URL</strong></th><th align="left"><strong>结果</strong></th><th><strong>原因</strong></th></tr></thead><tbody><tr><td><a href="http://store.company.com/dir2/other.html">http://store.company.com/dir2/other.html</a></td><td align="left">同源</td><td>只有路径不同</td></tr><tr><td><a href="http://store.company.com/dir/inner/another.html">http://store.company.com/dir/inner/another.html</a></td><td align="left">同源</td><td>只有路径不同</td></tr><tr><td><a href="https://store.company.com/secure.html">https://store.company.com/secure.html</a></td><td align="left">不同源</td><td>协议不同</td></tr><tr><td><a href="http://store.company.com:81/dir/etc.html">http://store.company.com:81/dir/etc.html</a></td><td align="left">不同源</td><td>端口不同 ( <code>http://</code> 默认端口是80)</td></tr><tr><td><a href="http://news.company.com/dir/other.html">http://news.company.com/dir/other.html</a></td><td align="left">不同源</td><td>主机不同</td></tr></tbody></table><p>1.2 同源安全策略</p><p>  同源安全策略，是浏览器方提供一种的安全策略。举个例子：我们登陆了一个网址为<code>http://www.A.com</code>的网站，那么默认我们只能访问和<code>http://www.A.com</code>同源的网站。在当前登陆的网站，发送的所有请求地址只要是和当前网站同源的地址，那么可以访问。但是如果此时在<code>http://www.A.com</code>向<code>http://www.B.com</code>发送一个请求。此时就会触发浏览器同源安全策略。</p><p><strong>演示</strong><br>在一个地址为<code>http://localhost:3000/</code>的网址地址中的页面，向地址为<code>http://localhost:3001/</code>的网址发送一个ajax请求。</p><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs ts"><span class="hljs-built_in">window</span>.onload = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;<br><br>    <span class="hljs-keyword">let</span> xhr = <span class="hljs-keyword">new</span> XMLHttpRequest();<br><br>    xhr.open(<span class="hljs-string">&#x27;get&#x27;</span>, <span class="hljs-string">&#x27;http://localhost:3001/get&#x27;</span>);<br><br>    xhr.send();<br><br>    xhr.onload = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;<br>        <span class="hljs-built_in">console</span>.log(xhr.responseText);<br>   &#125;<br></code></pre></td></tr></table></figure><p>ajax请求触发浏览器同源策略<br><img src="/img/%E8%B7%A8%E5%9F%9F/ajax_%E8%B7%A8%E5%9F%9F.png" alt="ajax跨域请求失败"></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>JavaScript</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>JavaScript</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Git命令</title>
     <link href="/2018/12/04/Git%E5%85%A5%E9%97%A8%E4%B8%8E%E5%91%BD%E4%BB%A4/"/>
     <url>/2018/12/04/Git%E5%85%A5%E9%97%A8%E4%B8%8E%E5%91%BD%E4%BB%A4/</url>

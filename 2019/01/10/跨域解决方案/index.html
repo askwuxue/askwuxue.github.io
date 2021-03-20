@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
-  <title>Git命令 - Askwuxue</title>
+  <title>闭包到底是什么 - Askwuxue</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
 
@@ -162,7 +162,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="Git命令">
+            <span class="h2" id="subtitle" title="闭包到底是什么">
               
             </span>
 
@@ -172,8 +172,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2018-12-04 21:16" pubdate>
-        2018年12月4日 晚上
+      <time datetime="2019-01-10 18:39" pubdate>
+        2019年1月10日 晚上
       </time>
     </span>
   
@@ -184,7 +184,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      589 字
+      490 字
     </span>
   
 
@@ -224,42 +224,59 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Git命令</h1>
+            <h1 style="display: none">闭包到底是什么</h1>
             
             <div class="markdown-body">
-              <p><em>Git是一个版本控制系统，已经成为程序员必备的，必会的的工作软件。还没有入门的小伙伴，推荐大家学习廖雪峰老师的<a target="_blank" rel="noopener" href="https://www.liaoxuefeng.com/wiki/896043488029600">Git教程</a>，该教程非常适合新入门的同学学习，通俗易懂。因为基础的概念已经清楚了，但是对于常用的命令还没有很熟练，做一个常用命令的整理</em></p>
-<h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><ol>
-<li><p>添加远程仓库(本质就是为远程仓库添加一个别名，方便以后操作)</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs git">git remote add origin(仓库别名) (git@github.com:askwuxue&#x2F;Users.git)远程仓库地址<br></code></pre></td></tr></table></figure></li>
-<li><p>查看远程仓库</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs git">git remote -v <br></code></pre></td></tr></table></figure></li>
-<li><p>删除远程仓库</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs git">git remote rm origin<br></code></pre></td></tr></table></figure></li>
-<li><p>新建并切换分支</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs git">git checkout -b dev(新分支名)<br></code></pre></td></tr></table></figure></li>
-<li><p>切换分支分支</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs git">git branch dev(要切换的分支名)<br></code></pre></td></tr></table></figure></li>
-<li><p>删除分支</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs git">git branch -d dev(要删除的分支名)<br></code></pre></td></tr></table></figure></li>
-<li><p>查看所有标签</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs git">git tag<br></code></pre></td></tr></table></figure></li>
-<li><p>查看某标签</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs git">git show &lt;tagName&gt;<br></code></pre></td></tr></table></figure></li>
-<li><p>新建标签</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs git">git tag &lt;tagName&gt; &lt;commitId&gt;<br></code></pre></td></tr></table></figure></li>
-<li><p>新建标签并添加描述</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gut">git tag -a &lt;tagName&gt; -m &quot;tag message&quot; &lt;commitId&gt;<br></code></pre></td></tr></table></figure></li>
-<li><p>推送至远程库</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs git">&#x2F;&#x2F; 将分支内容推送至远程库，远程库就是github仓库地址的别名。-u是记住本次的对应关系，后续可直接使用 git push<br>git push -u origin(远程仓库) master(本地分支)<br></code></pre></td></tr></table></figure>
-<h3 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h3></li>
-<li><p>解决冲突<br><em>冲突产生：一个文件，没有在同一个版本的基础上顺序修改就产生了冲突。如：A,B 拿了同一个版本的文件进行编辑，A编辑好了，并且push了。B随后编辑好了，也要push。但是这个时候A已经进行过编辑，B又编辑，就产生了冲突。本质是没有拿同一个版本的文件进行编辑。所以在正常情况下，最好拿最新版本进行编辑，可以有效避免冲突。如果冲突已经产生，课按照下面的方式进行处理</em></p>
-</li>
-<li><p>1 手动解决冲突，在merge的时候，Git会告诉我们有冲突，如下<br><img src="/img/Git/conflict.png" srcset="/img/loading.gif" alt="conflict"></p>
-<p>Git 告诉我们有冲突，需要我们手动进行合并。合并后如下</p>
-<p><img src="/img/Git/resolve_conflict.png" srcset="/img/loading.gif" alt="resolve conflict"></p>
-</li>
-</ol>
-<p>手动合并结束，接下来，只需要像处理普通文件<code>git add</code>，<code>git commit</code>进行处理即可，至此，冲突解决完毕。</p>
+              <h3 id="跨域方案解决"><a href="#跨域方案解决" class="headerlink" title="跨域方案解决"></a>跨域方案解决</h3><p><em><code>ajax</code>的出现，推动了web的发展。随之，为了防止恶意文档，减少被攻击的可能。浏览器制定了同源安全策略</em></p>
+<h4 id="1-同源安全策略是什么？"><a href="#1-同源安全策略是什么？" class="headerlink" title="1. 同源安全策略是什么？"></a>1. 同源安全策略是什么？</h4><p><strong>很简单，接着看！</strong></p>
+<h5 id="1-1-什么是同源"><a href="#1-1-什么是同源" class="headerlink" title="1.1 什么是同源"></a>1.1 什么是同源</h5><p><strong>同源就是比较两个<code>URL</code>地址，当他们满足一定的条件，他们是同源的。</strong><br><strong>同时满足下面三个条件就是同源</strong></p>
+<ul>
+<li>协议相同</li>
+<li>主机相同</li>
+<li>端口相同</li>
+</ul>
+<p>看个例子</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs http">https://www.baidu.com/s?ie=UTF-8&amp;wd=a<br>// 协议 https<br>// 主机 www.baidu.com<br>// 端口 默认端口为80所以没有显示。<br></code></pre></td></tr></table></figure>
+<p><strong>练习</strong><br>下表给出了与 URL <a target="_blank" rel="noopener" href="http://store.company.com/dir/page.html">http://store.company.com/dir/page.html</a> 的源进行对比的示例:</p>
+<table>
+<thead>
+<tr>
+<th><strong>URL</strong></th>
+<th align="left"><strong>结果</strong></th>
+<th><strong>原因</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a target="_blank" rel="noopener" href="http://store.company.com/dir2/other.html">http://store.company.com/dir2/other.html</a></td>
+<td align="left">同源</td>
+<td>只有路径不同</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="http://store.company.com/dir/inner/another.html">http://store.company.com/dir/inner/another.html</a></td>
+<td align="left">同源</td>
+<td>只有路径不同</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://store.company.com/secure.html">https://store.company.com/secure.html</a></td>
+<td align="left">不同源</td>
+<td>协议不同</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="http://store.company.com:81/dir/etc.html">http://store.company.com:81/dir/etc.html</a></td>
+<td align="left">不同源</td>
+<td>端口不同 ( <code>http://</code> 默认端口是80)</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="http://news.company.com/dir/other.html">http://news.company.com/dir/other.html</a></td>
+<td align="left">不同源</td>
+<td>主机不同</td>
+</tr>
+</tbody></table>
+<p>1.2 同源安全策略</p>
+<p>  同源安全策略，是浏览器方提供一种的安全策略。举个例子：我们登陆了一个网址为<code>http://www.A.com</code>的网站，那么默认我们只能访问和<code>http://www.A.com</code>同源的网站。在当前登陆的网站，发送的所有请求地址只要是和当前网站同源的地址，那么可以访问。但是如果此时在<code>http://www.A.com</code>向<code>http://www.B.com</code>发送一个请求。此时就会触发浏览器同源安全策略。</p>
+<p><strong>演示</strong><br>在一个地址为<code>http://localhost:3000/</code>的网址地址中的页面，向地址为<code>http://localhost:3001/</code>的网址发送一个ajax请求。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs ts"><span class="hljs-built_in">window</span>.onload = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;<br><br>    <span class="hljs-keyword">let</span> xhr = <span class="hljs-keyword">new</span> XMLHttpRequest();<br><br>    xhr.open(<span class="hljs-string">&#x27;get&#x27;</span>, <span class="hljs-string">&#x27;http://localhost:3001/get&#x27;</span>);<br><br>    xhr.send();<br><br>    xhr.onload = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;<br>        <span class="hljs-built_in">console</span>.log(xhr.responseText);<br>   &#125;<br></code></pre></td></tr></table></figure>
+<p>ajax请求触发浏览器同源策略<br><img src="/img/%E8%B7%A8%E5%9F%9F/ajax_%E8%B7%A8%E5%9F%9F.png" srcset="/img/loading.gif" alt="ajax跨域请求失败"></p>
 
             </div>
             <hr>
@@ -269,7 +286,7 @@
                   <div class="post-meta mr-3">
                     <i class="iconfont icon-category"></i>
                     
-                      <a class="hover-with-bg" href="/categories/Git/">Git</a>
+                      <a class="hover-with-bg" href="/categories/JavaScript/">JavaScript</a>
                     
                   </div>
                 
@@ -277,7 +294,7 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/Git/">Git</a>
+                      <a class="hover-with-bg" href="/tags/JavaScript/">JavaScript</a>
                     
                   </div>
                 
@@ -290,9 +307,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2019/01/10/%E8%B7%A8%E5%9F%9F%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/">
+                      <a href="/2021/03/16/%E5%88%A9%E7%94%A8FormData%E5%AE%9E%E7%8E%B0%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">闭包到底是什么</span>
+                        <span class="hidden-mobile">外边距叠加的相关问题</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -300,8 +317,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2018/11/02/JavaScript%E4%B8%AD%E5%90%84%E7%A7%8Dfor%E5%BE%AA%E7%8E%AF%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E4%BB%A5%E5%8F%8A%E6%80%A7%E8%83%BD/">
-                        <span class="hidden-mobile">JavaScript中各种for循环的使用场景以及性能</span>
+                      <a href="/2018/12/04/Git%E5%85%A5%E9%97%A8%E4%B8%8E%E5%91%BD%E4%BB%A4/">
+                        <span class="hidden-mobile">Git命令</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
