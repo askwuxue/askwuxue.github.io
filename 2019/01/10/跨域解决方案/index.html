@@ -184,7 +184,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      490 字
+      1.5k 字
     </span>
   
 
@@ -194,7 +194,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      6
+      18
        分钟
     </span>
   
@@ -272,11 +272,41 @@
 <td>主机不同</td>
 </tr>
 </tbody></table>
-<p>1.2 同源安全策略</p>
-<p>  同源安全策略，是浏览器方提供一种的安全策略。举个例子：我们登陆了一个网址为<code>http://www.A.com</code>的网站，那么默认我们只能访问和<code>http://www.A.com</code>同源的网站。在当前登陆的网站，发送的所有请求地址只要是和当前网站同源的地址，那么可以访问。但是如果此时在<code>http://www.A.com</code>向<code>http://www.B.com</code>发送一个请求。此时就会触发浏览器同源安全策略。</p>
+<h5 id="1-2-同源安全策略"><a href="#1-2-同源安全策略" class="headerlink" title="1.2 同源安全策略"></a>1.2 同源安全策略</h5><p>  同源安全策略，是浏览器方提供一种的安全策略。举个例子：我们登陆了一个网址为<code>http://www.A.com</code>的网站，那么默认我们只能访问和<code>http://www.A.com</code>同源的网站。在当前登陆的网站，发送的所有请求地址只要是和当前网站同源的地址，那么可以访问。但是如果此时在<code>http://www.A.com</code>向<code>http://www.B.com</code>发送一个请求。此时就会触发浏览器同源安全策略。</p>
 <p><strong>演示</strong><br>在一个地址为<code>http://localhost:3000/</code>的网址地址中的页面，向地址为<code>http://localhost:3001/</code>的网址发送一个ajax请求。</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs ts"><span class="hljs-built_in">window</span>.onload = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;<br><br>    <span class="hljs-keyword">let</span> xhr = <span class="hljs-keyword">new</span> XMLHttpRequest();<br><br>    xhr.open(<span class="hljs-string">&#x27;get&#x27;</span>, <span class="hljs-string">&#x27;http://localhost:3001/get&#x27;</span>);<br><br>    xhr.send();<br><br>    xhr.onload = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;<br>        <span class="hljs-built_in">console</span>.log(xhr.responseText);<br>   &#125;<br></code></pre></td></tr></table></figure>
 <p>ajax请求触发浏览器同源策略<br><img src="/img/%E8%B7%A8%E5%9F%9F/ajax_%E8%B7%A8%E5%9F%9F.png" srcset="/img/loading.gif" alt="ajax跨域请求失败"></p>
+<p>如上，我们用ajax进行跨域请求，然后出发了浏览器的同源安全策略。不能使用ajax进行请求了，所以，聪明的人想出了各种办法。其中<code>jsonp</code>是最早的解决方案之一。</p>
+<h4 id="2-跨域方案解决之JSONP（jsonp-json-with-padding-）"><a href="#2-跨域方案解决之JSONP（jsonp-json-with-padding-）" class="headerlink" title="2. 跨域方案解决之JSONP（jsonp json with padding ）"></a>2. 跨域方案解决之JSONP（jsonp json with padding ）</h4><p><em>我们已经知道了，ajax不支持跨域请求。但是我们页面中是有支持跨域请求的存在的，如<code>script</code>标签的<code>src</code>属性，用来加载<code>JavaScript</code>资源，请求方式是<code>GET</code>。这种方式是支持跨域的，这也是我们在页面上可以引入在线的<code>jQuery</code>等资源的原因。所以，我们可以利用这个script这个特性来进行跨域。</em></p>
+<h5 id="2-1-script标签的src属性"><a href="#2-1-script标签的src属性" class="headerlink" title="2.1 script标签的src属性"></a>2.1 script标签的src属性</h5><p>我们必须清楚的认识到以下两点。</p>
+<ul>
+<li><code>script</code>中包含的必须可执行的<code>JavaScript</code>代码</li>
+<li>服务端必须返回<code>JavaScript</code>代码</li>
+<li>必须要有动态创建的<code>script</code>标签。因为请求时动态的，我们需要根据请求动态生成<code>script</code>标签<h5 id="2-1-JSONP实现思路"><a href="#2-1-JSONP实现思路" class="headerlink" title="2.1 JSONP实现思路"></a>2.1 JSONP实现思路</h5></li>
+</ul>
+<ol>
+<li>在客户端定义一个函数。</li>
+<li>在服务端返回上一步的函数的调用给客户端（服务端无法真正调用，只是将函数的调用作为字符串返回）。</li>
+<li>客户端接受到该函数调用，然后执行。</li>
+</ol>
+<p><strong>补充： 1. 在上述第二步中，服务端将真正想返回的数据放在函数的实参中。在客户端调用时，就可以拿到对应的数据</strong><br>    <strong>2. 我们定义的函数必须是全局的，这样服务端返回后，我们才能正常调用。因为服务端返回的函数调用是在全局下的</strong></p>
+<h5 id="2-1-JSONP客户端实现代码"><a href="#2-1-JSONP客户端实现代码" class="headerlink" title="2.1 JSONP客户端实现代码"></a>2.1 JSONP客户端实现代码</h5><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs ts"><span class="hljs-comment">// 参数说明</span><br><span class="hljs-comment">// 调用函数传递的实参</span><br>options = &#123;<br>	url: 请求地址,<br>	<span class="hljs-comment">// 用户自定义参数</span><br>	params: &#123;<span class="hljs-attr">key</span>: value&#125;,<br>	<span class="hljs-comment">// 用户请求成功回调函数</span><br>	succss: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;&#125;<br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">jsonp</span>(<span class="hljs-params">options</span>) </span>&#123;<br>    <span class="hljs-comment">// 获得页面body标签</span><br>    <span class="hljs-keyword">let</span> body = <span class="hljs-built_in">document</span>.getElementsByTagName(<span class="hljs-string">&#x27;body&#x27;</span>)[<span class="hljs-number">0</span>];<br>    <span class="hljs-comment">// 动态创建script标签</span><br>    <span class="hljs-keyword">let</span> script = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">&#x27;script&#x27;</span>);<br>    <span class="hljs-comment">// 用户请求的地址</span><br>    script.src = options.url;<br>    <span class="hljs-comment">// 生成一个随机数，我们想将函数的名称发送给服务端，并要求服务端返回同名函数。因为我们在客户端上将定义该函数。因此，要保证函数名不一致，所以使用随机数</span><br>    <span class="hljs-keyword">let</span> random = <span class="hljs-built_in">Math</span>.random().toString().replace(<span class="hljs-string">&#x27;.&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);<br>    <span class="hljs-comment">// 随机函数名</span><br>    <span class="hljs-keyword">let</span> fn = (<span class="hljs-string">&#x27;jsonp&#x27;</span> + random);<br>    <span class="hljs-comment">// 必须将fn挂在在全局下，否则服务端返回函数无法执行。</span><br>    <span class="hljs-built_in">window</span>[fn] = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;&#125;;<br>    <span class="hljs-comment">// 将用户调用的成功的函数体赋值给全局下的函数</span><br>    <span class="hljs-built_in">window</span>[fn] = options.success;<br>    <span class="hljs-comment">// 真正的请求地址</span><br>    script.src += <span class="hljs-string">`?callback=<span class="hljs-subst">$&#123;fn&#125;</span>`</span>;<br>    <span class="hljs-comment">// 如果用户传递了自定义参数</span><br>    <span class="hljs-keyword">if</span> (options.params) &#123;<br>        <span class="hljs-keyword">let</span> paramStr = <span class="hljs-string">&#x27;&#x27;</span>;<br>        <span class="hljs-built_in">Object</span>.keys(options.params).forEach(<span class="hljs-function">(<span class="hljs-params">item</span>) =&gt;</span> &#123;<br>            paramStr += (<span class="hljs-string">&#x27;&amp;&#x27;</span> + item + <span class="hljs-string">&#x27;=&#x27;</span> + options.params[item]);<br>        &#125;)<br>        script.src += paramStr;<br>    &#125;<br>    <span class="hljs-comment">// 动态生成script</span><br>    body.appendChild(script);<br>    <span class="hljs-comment">// script 成功请求后将script从DOM中删除</span><br>    script.onload = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;<br>        body.removeChild(script);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h5 id="1-3-JSONP客户端实现代码"><a href="#1-3-JSONP客户端实现代码" class="headerlink" title="1.3 JSONP客户端实现代码"></a>1.3 JSONP客户端实现代码</h5><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs ts"><span class="hljs-comment">// 请求url中的参数</span><br>   <span class="hljs-keyword">let</span> urlParams = req.url.substring(req.url.indexOf(<span class="hljs-string">&#x27;?&#x27;</span>) + <span class="hljs-number">1</span>);<br>   <span class="hljs-comment">// 对请求参数切割</span><br>   <span class="hljs-keyword">let</span> paramsArr = urlParams.split(<span class="hljs-string">&#x27;&amp;&#x27;</span>);<br>   <span class="hljs-comment">// 请求参数对象</span><br>   <span class="hljs-keyword">let</span> paramsObj = &#123;&#125;;<br>   <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = paramsArr.length; i--; i &lt; <span class="hljs-number">0</span>) &#123;<br>       <span class="hljs-keyword">let</span> temp = paramsArr[i].split(<span class="hljs-string">&#x27;=&#x27;</span>);<br>       paramsObj[temp[<span class="hljs-number">0</span>]] = temp[<span class="hljs-number">1</span>];<br>   &#125;<br>   <span class="hljs-comment">// 返回的数据</span><br>   <span class="hljs-keyword">let</span> data = <span class="hljs-built_in">JSON</span>.stringify(&#123; <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;wuxue&quot;</span> &#125;);<br>   <span class="hljs-comment">// TODO 浏览器只能接受字符串</span><br><span class="hljs-comment">// 返回给客户端的内容</span><br>   <span class="hljs-keyword">let</span> resFn = <span class="hljs-string">`<span class="hljs-subst">$&#123;paramsObj[<span class="hljs-string">&#x27;callback&#x27;</span>]&#125;</span>(<span class="hljs-subst">$&#123;data&#125;</span>)`</span>;<br>   res.send(resFn);<br></code></pre></td></tr></table></figure>
+
+
+<p><em>如上，就简单的实现了JSONP请求，解决了跨域的问题。跨域方案的解决，有很多种方式。JSONP只是其中最古老，并且受限比较多的一种。JSONP主要的问题如下</em></p>
+<ul>
+<li><p>只支持GET请求方式</p>
+</li>
+<li><p>不够优雅，有些繁琐</p>
+</li>
+<li><p>非种正统的凡是</p>
+</li>
+</ul>
+<p>参考资料</p>
+<blockquote>
+<p>阮一峰-<a target="_blank" rel="noopener" href="http://www.ruanyifeng.com/blog/2016/04/same-origin-policy.html">浏览器同源政策及其规避方法</a><br>阮一峰-<a target="_blank" rel="noopener" href="http://www.ruanyifeng.com/blog/2016/04/cors.html">跨域资源共享CORS</a></p>
+</blockquote>
 
             </div>
             <hr>
