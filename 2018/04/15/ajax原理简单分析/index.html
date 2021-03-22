@@ -184,7 +184,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2k 字
+      2.1k 字
     </span>
   
 
@@ -194,7 +194,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      26
+      27
        分钟
     </span>
   
@@ -227,7 +227,7 @@
             <h1 style="display: none">ajax的原理简单分析</h1>
             
             <div class="markdown-body">
-              <h4 id="关于ajax"><a href="#关于ajax" class="headerlink" title="关于ajax"></a>关于ajax</h4><p>​    说到ajax，就要说一下页面的请求方式。比如说，现在有两个页面，注册和登录页面，大家可以发现，一般，注册也登录页面中只有注册和登录的表单不同，页面其他部分都是一样的。注册后，需要跳转到登录页面，这个时候，有一种方式是请求服务器的整个登录，然后服务器返回整个登录页面。另一种方式是利用ajax，不向服务器请求整个登录页面，只是请求登录表单就可以。现在浏览器上重新渲染的，就只有局部的登录表单部分，即：局部刷新。ajax的优点大家都可以总结出来了吧？</p>
+              <h4 id="关于ajax"><a href="#关于ajax" class="headerlink" title="关于ajax"></a>关于ajax</h4><p>​    Ajax的出现是为了解决局部刷新的问题的。在web的远古时代，使用的方式是服务器渲染的技术。也就是说所有内容在服务端进行校验。对当时的web服务来说，这样是完全可行的。因为当时的web主要功能是图文浏览。随着时代的发展，需求的增加。我们需要在网站上完成一些工作。比如说：登录，注册等功能。这个时候，如果使用服务端渲染。用户在注册页面，必须填写完整所有的信息后，将页面发送至服务端进行校验。如果失败的话，用户之前填写的所有内容全部丢失，对用户来说非常不友好。此时，需要一种技术来解决这种困境。Ajax诞生了，可以不用将整个页面发送到服务端进行校验，可以将页面的局部内容发送至服务端进行处理。Ajax的诞生，才有了web的蓬勃发展与各种各样的新奇玩法。用户体验与web的性能有了质的提升。Ajax的主要作用总结如下：</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">1. 实现了局部刷新，提升了用户体验。<br></code></pre></td></tr></table></figure>
 <h5 id="ajax的实现原理"><a href="#ajax的实现原理" class="headerlink" title="ajax的实现原理"></a>ajax的实现原理</h5><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">// ajax 实现是依靠XMLHttpRequest对象实现的，IE浏览器下是ActiveXobject对象</span><br><span class="hljs-keyword">let</span> xhr = <span class="hljs-built_in">window</span>.XMLHttpRequest ? <span class="hljs-keyword">new</span> XMLHttpRequest() : <span class="hljs-keyword">new</span> ActiveXObject(<span class="hljs-string">&#x27;Microsoft.XMLHTTP&#x27;</span>);<br><br><span class="hljs-comment">// 参数分别是请求的方式，请求地址，同步（默认true）</span><br>xhr.open(method, url, <span class="hljs-literal">true</span>)		<br><br><span class="hljs-comment">// 等待浏览器响应</span><br>xhr.send();						<br><br>xhr.onreadystatechange = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.readyState != <span class="hljs-number">4</span>) <span class="hljs-keyword">return</span><br>&#125;<br></code></pre></td></tr></table></figure>
 <h6 id="实现详解"><a href="#实现详解" class="headerlink" title="实现详解"></a>实现详解</h6><p>第一点  <code>xhr</code>这个对象的状态<code>readyState</code><br>0 当xhr对象创建的时候<br>1 <code>open()</code>方法调用的时候<br>2 已经接受到了响应的响应头<br>3 正在下载响应体<br>4 整个响应报文下载完毕</p>
