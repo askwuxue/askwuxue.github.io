@@ -184,7 +184,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      861 字
+      949 字
     </span>
   
 
@@ -194,7 +194,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      10
+      11
        分钟
     </span>
   
@@ -250,6 +250,19 @@
 </blockquote>
 <p><strong>原理</strong></p>
 <p><img src="/img/React/redux.jpg" srcset="/img/loading.gif"></p>
+<p>图中，有几个概念还是需要清楚的。</p>
+<ol>
+<li><p><strong>Store</strong></p>
+<p>Store，状态管理仓库，所以的状态在Store中进行管理。</p>
+</li>
+<li><p><strong>Action Creators</strong></p>
+<p>动作创造者，如 进行 + 1 的操作，就会创造出一个<code>action</code>, 形式是：{  type: ‘+’， data: 1 }</p>
+</li>
+<li><p><strong>Reducers</strong></p>
+<p>最终进行处理的地方</p>
+</li>
+</ol>
+<p><code>Store</code>作为一个中心调度者，将<code>action</code>分发给<code>reducers</code>, <code>reducers</code></p>
 
             </div>
             <hr>
