@@ -1,0 +1,727 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="跨域方案解决ajax的出现，推动了web的发展。随之，为了防止恶意文档，保护用户信息安全。浏览器制定了同源安全策略 1. 同源安全策略是什么？很简单，接着看！ 1.1 什么是同源同源就是比较两个URL地址，当他们满足一定的条件，他们就是同源的。同时满足下面三个条件  协议相同 主机相同 端口相同  看个例子 1234https:&#x2F;&#x2F;www.baidu.com&#x2F;s?ie&#x3D;UTF-8&amp;wd&#x3D;a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="跨域方案解决">
+<meta property="og:url" content="http://example.com/2019/01/10/%E8%B7%A8%E5%9F%9F%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="跨域方案解决ajax的出现，推动了web的发展。随之，为了防止恶意文档，保护用户信息安全。浏览器制定了同源安全策略 1. 同源安全策略是什么？很简单，接着看！ 1.1 什么是同源同源就是比较两个URL地址，当他们满足一定的条件，他们就是同源的。同时满足下面三个条件  协议相同 主机相同 端口相同  看个例子 1234https:&#x2F;&#x2F;www.baidu.com&#x2F;s?ie&#x3D;UTF-8&amp;wd&#x3D;a">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://github.com/askwuxue/askwuxue.github.io/assets/32808762/13bac764-e1b3-4ab1-a28b-447221422579">
+<meta property="article:published_time" content="2019-01-10T10:39:20.000Z">
+<meta property="article:modified_time" content="2023-07-30T11:57:20.000Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="JavaScript">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://github.com/askwuxue/askwuxue.github.io/assets/32808762/13bac764-e1b3-4ab1-a28b-447221422579">
+  
+  
+  
+  <title>跨域方案解决 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="跨域方案解决"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-01-10 18:39" pubdate>
+          January 10, 2019 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.4k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          29 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">跨域方案解决</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h3 id="跨域方案解决"><a href="#跨域方案解决" class="headerlink" title="跨域方案解决"></a>跨域方案解决</h3><p><em><code>ajax</code>的出现，推动了web的发展。随之，为了防止恶意文档，保护用户信息安全。浏览器制定了同源安全策略</em></p>
+<h4 id="1-同源安全策略是什么？"><a href="#1-同源安全策略是什么？" class="headerlink" title="1. 同源安全策略是什么？"></a>1. 同源安全策略是什么？</h4><p><strong>很简单，接着看！</strong></p>
+<h5 id="1-1-什么是同源"><a href="#1-1-什么是同源" class="headerlink" title="1.1 什么是同源"></a>1.1 什么是同源</h5><p><strong>同源就是比较两个<code>URL</code>地址，当他们满足一定的条件，他们就是同源的。</strong><br><strong>同时满足下面三个条件</strong></p>
+<ul>
+<li>协议相同</li>
+<li>主机相同</li>
+<li>端口相同</li>
+</ul>
+<p>看个例子</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs http">https://www.baidu.com/s?ie=UTF-8&amp;wd=a<br>// 协议 https<br>// 主机 www.baidu.com<br>// 端口 默认端口为80所以没有显示。<br></code></pre></td></tr></table></figure>
+<p><strong>练习</strong><br>下表给出了与 URL <a target="_blank" rel="noopener" href="http://store.company.com/dir/page.html">http://store.company.com/dir/page.html</a> 的源进行对比的示例:</p>
+<table>
+<thead>
+<tr>
+<th><strong>URL</strong></th>
+<th align="left"><strong>结果</strong></th>
+<th><strong>原因</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a target="_blank" rel="noopener" href="http://store.company.com/dir2/other.html">http://store.company.com/dir2/other.html</a></td>
+<td align="left">同源</td>
+<td>只有路径不同</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="http://store.company.com/dir/inner/another.html">http://store.company.com/dir/inner/another.html</a></td>
+<td align="left">同源</td>
+<td>只有路径不同</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://store.company.com/secure.html">https://store.company.com/secure.html</a></td>
+<td align="left">不同源</td>
+<td>协议不同</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="http://store.company.com:81/dir/etc.html">http://store.company.com:81/dir/etc.html</a></td>
+<td align="left">不同源</td>
+<td>端口不同 ( <code>http://</code> 默认端口是80)</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="http://news.company.com/dir/other.html">http://news.company.com/dir/other.html</a></td>
+<td align="left">不同源</td>
+<td>主机不同</td>
+</tr>
+</tbody></table>
+<h5 id="1-2-同源安全策略"><a href="#1-2-同源安全策略" class="headerlink" title="1.2 同源安全策略"></a>1.2 同源安全策略</h5><p>  同源安全策略，是浏览器方提供一种的安全策略。举个例子：我们登陆了一个网址为<code>http://www.A.com</code>的网站，那么默认我们只能请求和<code>http://www.A.com</code>同源的网站。在<code>http://www.A.com</code>网站，发送的所有请求地址只要是和<code>http://www.A.com</code>网站同源的地址，那么可以访问。但是如果此时在<code>http://www.A.com</code>向<code>http://www.B.com</code>发送一个请求。此时就会触发浏览器同源安全策略。</p>
+<p><strong>演示</strong><br>在一个地址为<code>http://localhost:3000/</code>的网址地址中的页面，向地址为<code>http://localhost:3001/</code>的网址发送一个ajax请求。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs ts"><span class="hljs-variable language_">window</span>.<span class="hljs-property">onload</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;<br><br>    <span class="hljs-keyword">let</span> xhr = <span class="hljs-keyword">new</span> <span class="hljs-title class_">XMLHttpRequest</span>();<br><br>    xhr.<span class="hljs-title function_">open</span>(<span class="hljs-string">&#x27;get&#x27;</span>, <span class="hljs-string">&#x27;http://localhost:3001/get&#x27;</span>);<br><br>    xhr.<span class="hljs-title function_">send</span>();<br><br>    xhr.<span class="hljs-property">onload</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(xhr.<span class="hljs-property">responseText</span>);<br>   &#125;<br></code></pre></td></tr></table></figure>
+<p>ajax请求触发浏览器同源策略<br><img src="https://github.com/askwuxue/askwuxue.github.io/assets/32808762/13bac764-e1b3-4ab1-a28b-447221422579" srcset="/img/loading.gif" lazyload alt="ajax_跨域"></p>
+<p>如上，我们用<code>ajax</code>进行了一个跨域请求，触发了浏览器的同源安全策略。因此，不能使用<code>ajax</code>进行请求，聪明的人想出了各种办法。其中<code>jsonp</code>是最早的解决方案之一。</p>
+<h4 id="2-跨域方案解决之JSONP（jsonp-json-with-padding-）"><a href="#2-跨域方案解决之JSONP（jsonp-json-with-padding-）" class="headerlink" title="2. 跨域方案解决之JSONP（jsonp json with padding ）"></a>2. 跨域方案解决之<code>JSONP（jsonp json with padding ）</code></h4><p><em>我们已经知道了，<code>ajax</code>不支持跨域请求。但是我们页面中是有支持跨域请求的存在的，如<code>script</code>标签的<code>src</code>属性，用来加载<code>JavaScript</code>资源，请求方式是<code>GET</code>。这种方式是支持跨域的，这也是我们在页面上可以引入在线的<code>jQuery</code>等资源的原因。所以，我们可以利用这个<code>script</code>标签的这个特性来进行跨域请求。</em></p>
+<h5 id="2-1-script标签的src属性"><a href="#2-1-script标签的src属性" class="headerlink" title="2.1 script标签的src属性"></a>2.1 script标签的src属性</h5><p>我们必须清楚的认识到以下3点</p>
+<ul>
+<li><code>script</code>中包含的必须可执行的<code>JavaScript</code>代码</li>
+<li>服务端必须返回<code>JavaScript</code>代码</li>
+<li>必须要有动态创建的<code>script</code>标签。因为请求是动态的，我们需要根据请求动态生成<code>script</code>标签</li>
+</ul>
+<h5 id="2-1-JSONP实现思路"><a href="#2-1-JSONP实现思路" class="headerlink" title="2.1 JSONP实现思路"></a>2.1 JSONP实现思路</h5><ol>
+<li>在客户端定义一个函数。</li>
+<li>在服务端返回第一步定义函数的调用给客户端（服务端无法调用，只是将函数的调用作为字符串返回）。</li>
+<li>客户端接收到该函数调用，然后执行。<br><strong>补充： 1. 在上述第第二步中，服务端将真正想返回的数据放在函数的实参中。在客户端调用时，就可以拿到对应的数据</strong><br> <strong>2. 我们定义的函数必须是全局的，这样服务端返回后，我们才能正常调用。因为服务端返回的函数调用是全局下的</strong></li>
+</ol>
+<h5 id="2-1-JSONP请求封装"><a href="#2-1-JSONP请求封装" class="headerlink" title="2.1 JSONP请求封装"></a>2.1 JSONP请求封装</h5><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs ts"><span class="hljs-comment">// 参数说明</span><br><span class="hljs-comment">// 调用JSONP请求传递的用户需要传递</span><br>options = &#123;<br>	<span class="hljs-attr">url</span>: 请求地址,<br>	<span class="hljs-comment">// 用户自定义参数</span><br>	<span class="hljs-attr">params</span>: &#123;<span class="hljs-attr">key</span>: value&#125;,<br>	<span class="hljs-comment">// 用户请求成功回调函数</span><br>	<span class="hljs-attr">succss</span>: <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;&#125;<br>&#125;<br><span class="hljs-keyword">function</span> <span class="hljs-title function_">jsonp</span>(<span class="hljs-params">options</span>) &#123;<br>    <span class="hljs-comment">// 获得页面body标签</span><br>    <span class="hljs-keyword">let</span> body = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementsByTagName</span>(<span class="hljs-string">&#x27;body&#x27;</span>)[<span class="hljs-number">0</span>];<br>    <span class="hljs-comment">// 动态创建script标签</span><br>    <span class="hljs-keyword">let</span> script = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;script&#x27;</span>);<br>    <span class="hljs-comment">// 用户请求的地址</span><br>    script.<span class="hljs-property">src</span> = options.<span class="hljs-property">url</span>;<br>    <span class="hljs-comment">// 生成一个随机数，我们想将函数的名称发送给服务端，并要求服务端返回同名函数。因为我们在客户端上将定义该函数。因此，要保证函数名不一致，所以使用随机数</span><br>    <span class="hljs-keyword">let</span> random = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>().<span class="hljs-title function_">toString</span>().<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;.&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);<br>    <span class="hljs-comment">// 随机函数名</span><br>    <span class="hljs-keyword">let</span> fn = (<span class="hljs-string">&#x27;jsonp&#x27;</span> + random);<br>    <span class="hljs-comment">// 必须将fn挂在在全局下，否则服务端返回函数无法执行。</span><br>    <span class="hljs-variable language_">window</span>[fn] = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;&#125;;<br>    <span class="hljs-comment">// 将用户调用的成功的函数体赋值给全局下的函数</span><br>    <span class="hljs-variable language_">window</span>[fn] = options.<span class="hljs-property">success</span>;<br>    <span class="hljs-comment">// 真正的请求地址</span><br>    script.<span class="hljs-property">src</span> += <span class="hljs-string">`?callback=<span class="hljs-subst">$&#123;fn&#125;</span>`</span>;<br>    <span class="hljs-comment">// 用户传递了自定义参数</span><br>    <span class="hljs-keyword">if</span> (options.<span class="hljs-property">params</span>) &#123;<br>        <span class="hljs-keyword">let</span> paramStr = <span class="hljs-string">&#x27;&#x27;</span>;<br>        <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(options.<span class="hljs-property">params</span>).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">item</span>) =&gt;</span> &#123;<br>            paramStr += (<span class="hljs-string">&#x27;&amp;&#x27;</span> + item + <span class="hljs-string">&#x27;=&#x27;</span> + options.<span class="hljs-property">params</span>[item]);<br>        &#125;)<br>        script.<span class="hljs-property">src</span> += paramStr;<br>    &#125;<br>    <span class="hljs-comment">// 动态生成script</span><br>    body.<span class="hljs-title function_">appendChild</span>(script);<br>    <span class="hljs-comment">// script 成功请求后将script从DOM中删除</span><br>    script.<span class="hljs-property">onload</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;<br>        body.<span class="hljs-title function_">removeChild</span>(script);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h5 id="1-3-JSONP客户端实现代码"><a href="#1-3-JSONP客户端实现代码" class="headerlink" title="1.3 JSONP客户端实现代码"></a>1.3 JSONP客户端实现代码</h5><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs ts"><span class="hljs-comment">// 请求url中的参数</span><br>   <span class="hljs-keyword">let</span> urlParams = req.<span class="hljs-property">url</span>.<span class="hljs-title function_">substring</span>(req.<span class="hljs-property">url</span>.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;?&#x27;</span>) + <span class="hljs-number">1</span>);<br>   <span class="hljs-comment">// 对请求参数切割</span><br>   <span class="hljs-keyword">let</span> paramsArr = urlParams.<span class="hljs-title function_">split</span>(<span class="hljs-string">&#x27;&amp;&#x27;</span>);<br>   <span class="hljs-comment">// 请求参数对象</span><br>   <span class="hljs-keyword">let</span> paramsObj = &#123;&#125;;<br>   <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = paramsArr.<span class="hljs-property">length</span>; i--; i &lt; <span class="hljs-number">0</span>) &#123;<br>       <span class="hljs-keyword">let</span> temp = paramsArr[i].<span class="hljs-title function_">split</span>(<span class="hljs-string">&#x27;=&#x27;</span>);<br>       paramsObj[temp[<span class="hljs-number">0</span>]] = temp[<span class="hljs-number">1</span>];<br>   &#125;<br>   <span class="hljs-comment">// 返回的数据</span><br>   <span class="hljs-keyword">let</span> data = <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">stringify</span>(&#123; <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;wuxue&quot;</span> &#125;);<br>   <span class="hljs-comment">// TODO 浏览器只能接受字符串</span><br><span class="hljs-comment">// 返回给客户端的内容</span><br>   <span class="hljs-keyword">let</span> resFn = <span class="hljs-string">`<span class="hljs-subst">$&#123;paramsObj[<span class="hljs-string">&#x27;callback&#x27;</span>]&#125;</span>(<span class="hljs-subst">$&#123;data&#125;</span>)`</span>;<br>   res.<span class="hljs-title function_">send</span>(resFn);<br></code></pre></td></tr></table></figure>
+
+
+
+<p><em>如上，简单的实现了JSONP请求，解决了跨域的问题。跨域方案的解决，有很多种方式。JSONP只是其中最古老，并且受限比较多的一种。JSONP主要的问题如下</em></p>
+<ul>
+<li><p>只支持GET请求方式</p>
+</li>
+<li><p>不够优雅，有些繁琐</p>
+</li>
+<li><p>非种正统的方式</p>
+</li>
+</ul>
+<p>参考资料</p>
+<blockquote>
+<p>阮一峰-<a target="_blank" rel="noopener" href="http://www.ruanyifeng.com/blog/2016/04/same-origin-policy.html">浏览器同源政策及其规避方法</a><br>阮一峰-<a target="_blank" rel="noopener" href="http://www.ruanyifeng.com/blog/2016/04/cors.html">跨域资源共享CORS</a></p>
+</blockquote>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/JavaScript/" class="category-chain-item">JavaScript</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/JavaScript/" class="print-no-link">#JavaScript</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>跨域方案解决</div>
+      <div>http://example.com/2019/01/10/跨域解决方案/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>January 10, 2019</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/03/19/%E7%AE%80%E6%98%93%E7%89%88Vue-Router%E5%AE%9E%E7%8E%B0/" title="简易版Vue-Router实现">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">简易版Vue-Router实现</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2018/12/04/Git%E5%85%A5%E9%97%A8%E4%B8%8E%E5%91%BD%E4%BB%A4/" title="Git命令">
+                        <span class="hidden-mobile">Git命令</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

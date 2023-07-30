@@ -1,0 +1,1062 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Vue和React等库的一个比较共同的地方是使用了Virtual DOM。为什么会选择使用Virtual DOM，而不是像JQuery一样，只是把DOM的操作进行封装。主要的原始是Virtual DOM将真实DOM转成JavaScript对象，可以通过diff算法，找到最少的需要更新的DOM元素进行更新。如果页面的数据量比较大的话，相对来说可以保证一个比较高的性能。对于Vue这些框架来说的话，使用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="通过snabbdom源码调试分析深入Virtual DOM原理">
+<meta property="og:url" content="http://example.com/2021/06/03/%E9%80%9A%E8%BF%87snabbdom%E6%BA%90%E7%A0%81%E8%B0%83%E8%AF%95%E5%88%86%E6%9E%90%E6%B7%B1%E5%85%A5Virtual%20DOM%E5%8E%9F%E7%90%86/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Vue和React等库的一个比较共同的地方是使用了Virtual DOM。为什么会选择使用Virtual DOM，而不是像JQuery一样，只是把DOM的操作进行封装。主要的原始是Virtual DOM将真实DOM转成JavaScript对象，可以通过diff算法，找到最少的需要更新的DOM元素进行更新。如果页面的数据量比较大的话，相对来说可以保证一个比较高的性能。对于Vue这些框架来说的话，使用">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/assets/image-20200102104642121.png">
+<meta property="og:image" content="http://example.com/img/assets/image-20200102103653779.png">
+<meta property="og:image" content="http://example.com/img/assets/image-20200102103653779.png">
+<meta property="og:image" content="http://example.com/img/assets/image-20200109184608649.png">
+<meta property="og:image" content="http://example.com/img/assets/image-20200103121812840.png">
+<meta property="og:image" content="http://example.com/img/assets/image-20200103125428541.png">
+<meta property="og:image" content="http://example.com/img/assets/image-20200103125735048.png">
+<meta property="og:image" content="http://example.com/img/assets/image-20200109184822439.png">
+<meta property="og:image" content="http://example.com/img/assets/image-20200103150918335.png">
+<meta property="og:image" content="http://example.com/img/assets/image-20200109194751093.png">
+<meta property="og:image" content="http://example.com/img/assets/image-20200112120036948.png">
+<meta property="article:published_time" content="2021-06-03T11:03:10.000Z">
+<meta property="article:modified_time" content="2023-07-30T11:57:07.000Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Vue">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/img/assets/image-20200102104642121.png">
+  
+  
+  
+  <title>通过snabbdom源码调试分析深入Virtual DOM原理 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="通过snabbdom源码调试分析深入Virtual DOM原理"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-06-03 19:03" pubdate>
+          June 3, 2021 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          21k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          174 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">通过snabbdom源码调试分析深入Virtual DOM原理</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Vue和React等库的一个比较共同的地方是使用了Virtual DOM。为什么会选择使用Virtual DOM，而不是像JQuery一样，只是把DOM的操作进行封装。主要的原始是Virtual DOM将真实DOM转成JavaScript对象，可以通过diff算法，找到最少的需要更新的DOM元素进行更新。如果页面的数据量比较大的话，相对来说可以保证一个比较高的性能。对于Vue这些框架来说的话，使用上手相对来说比较简单。但是了解其中的核心原理，可能会在代码层面写出性能更优的代码。所有，这也是学习Virtual DOM的原因。</p>
+<h2 id="Virtual-DOM是什么？"><a href="#Virtual-DOM是什么？" class="headerlink" title="Virtual DOM是什么？"></a>Virtual DOM是什么？</h2><ul>
+<li><p>**Virtual DOM(虚拟 DOM)**，是由普通的 JS 对象来描述 DOM 对象，因为不是真实的 DOM 对象，所以叫 Virtual DOM</p>
+</li>
+<li><p>可以使用 Virtual DOM 来描述真实 DOM，如下示例</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs js">&#123;<br>  <span class="hljs-attr">sel</span>: <span class="hljs-string">&quot;div&quot;</span>,<br>  <span class="hljs-attr">data</span>: &#123;&#125;,<br>  <span class="hljs-attr">children</span>: <span class="hljs-literal">undefined</span>,<br>  <span class="hljs-attr">text</span>: <span class="hljs-string">&quot;Hello Virtual DOM&quot;</span>,<br>  <span class="hljs-attr">elm</span>: <span class="hljs-literal">undefined</span>,<br>  <span class="hljs-attr">key</span>: <span class="hljs-literal">undefined</span><br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="为什么使用-Virtual-DOM？"><a href="#为什么使用-Virtual-DOM？" class="headerlink" title="为什么使用 Virtual DOM？"></a>为什么使用 Virtual DOM？</h2><ul>
+<li>手动操作 DOM 比较麻烦，还需要考虑浏览器兼容性问题，虽然有 jQuery 等库简化 DOM 操作，但是随着项目的复杂 DOM 操作复杂提升</li>
+<li>Virtual DOM 的好处是当状态改变时不需要立即更新 DOM，只需要创建一个虚拟树来描述 DOM， Virtual DOM 内部将弄清楚如何有效(diff)的更新 DOM</li>
+<li>参考 github 上 <a target="_blank" rel="noopener" href="https://github.com/Matt-Esch/virtual-dom">virtual-dom</a> 的描述<ul>
+<li>虚拟 DOM 可以维护程序的状态，跟踪上一次的状态</li>
+<li>通过比较前后两次状态的差异更新真实 DOM</li>
+</ul>
+</li>
+</ul>
+<h2 id="虚拟-DOM-有什么作用？"><a href="#虚拟-DOM-有什么作用？" class="headerlink" title="虚拟 DOM 有什么作用？"></a>虚拟 DOM 有什么作用？</h2><ul>
+<li><p>维护视图和状态的关系</p>
+</li>
+<li><p>复杂视图情况下提升渲染性能</p>
+</li>
+<li><p>除了渲染 DOM 以外，还可以实现 SSR(Nuxt.js&#x2F;Next.js)、原生应用(Weex&#x2F;React Native)、小程序(mpvue&#x2F;uni-app)等</p>
+<p> <img src="/img/assets/image-20200102104642121.png" srcset="/img/loading.gif" lazyload></p>
+</li>
+</ul>
+<h2 id="实现了Virtual-DOM-的库"><a href="#实现了Virtual-DOM-的库" class="headerlink" title="实现了Virtual DOM 的库"></a>实现了Virtual DOM 的库</h2><p>因为<strong>Virtual DOM</strong>的实现其实是更底层的，为了快速上手，我们可以借助github上的优秀开源<strong>Virtual DOM</strong>库，了解<strong>Virtual DOM</strong>的原理。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/snabbdom/snabbdom">Snabbdom</a>一个简单，高效的virtual DOM库。<a target="_blank" rel="noopener" href="https://github.com/vuejs/vue/blob/dev/src/core/vdom/patch.js">在vue框架中，v-dom的核心也是基于本库进行二次开发的</a>。<ul>
+<li>通过模块可扩展</li>
+<li>源码使用 TypeScript 开发</li>
+<li>最快的 Virtual DOM 之一</li>
+</ul>
+</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/Matt-Esch/virtual-dom">virtual-dom</a></li>
+</ul>
+<h2 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://codesandbox.io/s/jq-demo-5i7qp">uery-demo</a></li>
+<li><a target="_blank" rel="noopener" href="https://codesandbox.io/s/snabbdom-demo-4hbyb">snabbdom-demo</a></li>
+</ul>
+<h1 id="Snabbdom-基本使用"><a href="#Snabbdom-基本使用" class="headerlink" title="Snabbdom 基本使用"></a>Snabbdom 基本使用</h1><p><a target="_blank" rel="noopener" href="https://parceljs.org/getting_started.html">parcel</a>是 Web 应用打包工具，适用于经验不同的开发者。它利用多核处理提供了极快的速度，并且不需要任何配置。</p>
+<ul>
+<li><p>创建项目，并安装 <a target="_blank" rel="noopener" href="https://parceljs.org/getting_started.html">parcel</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 创建项目目录</span><br>md snabbdom-demo<br><span class="hljs-comment"># 进入项目目录</span><br><span class="hljs-built_in">cd</span> snabbdom-demo<br><span class="hljs-comment"># 创建 package.json</span><br>npm init -y<br><span class="hljs-comment"># 本地安装 parcel</span><br>npm install parcel-bundler -D<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>配置 package.json 的 scripts</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-attr">&quot;scripts&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>  <span class="hljs-attr">&quot;dev&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;parcel index.html --open&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;build&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;parcel build index.html&quot;</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p>创建目录结构</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs txt">│  index.html<br>│  package.json<br>└─src<br>     		01-basicusage.js<br></code></pre></td></tr></table></figure></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># --depth 表示克隆深度, 1 表示只克隆最新的版本. 因为如果项目迭代的版本很多, 克隆会很慢</span><br>git <span class="hljs-built_in">clone</span> -b v2.1.0 --depth=1 https://github.com/snabbdom/snabbdom.git<br></code></pre></td></tr></table></figure>
+
+<h3 id="安装-Snabbdom"><a href="#安装-Snabbdom" class="headerlink" title="安装  Snabbdom"></a>安装  Snabbdom</h3><ul>
+<li><p>安装 Snabbdom</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">npm install snabbdom@2.1.0<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="导入-Snabbdom"><a href="#导入-Snabbdom" class="headerlink" title="导入  Snabbdom"></a>导入  Snabbdom</h3><ul>
+<li>Snabbdom 的两个核心函数 init 和 h() <ul>
+<li>init() 是一个高阶函数，返回 patch() </li>
+<li>h() 返回虚拟节点 VNode，这个函数我们在使用 Vue.js 的时候见过</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> &#123; init &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;snabbdom/init&#x27;</span><br><span class="hljs-keyword">import</span> &#123; h &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;snabbdom/h&#x27;</span><br><span class="hljs-keyword">const</span> patch = <span class="hljs-title function_">init</span>([])<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意：此时运行的话会告诉我们找不到 init &#x2F; h 模块，因为模块路径并不是 snabbdom&#x2F;int，这个路径是在 package.json 中的 exports 字段设置的，而我们使用的打包工具不支持 exports 这个字段，webpack 4 也不支持，webpack 5 支持该字段。该字段在导入 snabbdom&#x2F;init 的时候会补全路径成 snabbdom&#x2F;build&#x2F;package&#x2F;init.js</p>
+</blockquote>
+<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs n1ql">&quot;exports&quot;: &#123;<br>    &quot;./init&quot;: &quot;./<span class="hljs-keyword">build</span>/package/init.js<span class="hljs-string">&quot;,</span><br><span class="hljs-string">    &quot;</span>./h<span class="hljs-string">&quot;: &quot;</span>./<span class="hljs-keyword">build</span>/package/h.js<span class="hljs-string">&quot;,</span><br><span class="hljs-string">    &quot;</span>./helpers/attachto<span class="hljs-string">&quot;: &quot;</span>./<span class="hljs-keyword">build</span>/package/helpers/attachto.js<span class="hljs-string">&quot;,</span><br><span class="hljs-string">    &quot;</span>./hooks<span class="hljs-string">&quot;: &quot;</span>./<span class="hljs-keyword">build</span>/package/hooks.js<span class="hljs-string">&quot;,</span><br><span class="hljs-string">    &quot;</span>./htmldomapi<span class="hljs-string">&quot;: &quot;</span>./<span class="hljs-keyword">build</span>/package/htmldomapi.js<span class="hljs-string">&quot;,</span><br><span class="hljs-string">    &quot;</span>./<span class="hljs-keyword">is</span><span class="hljs-string">&quot;: &quot;</span>./<span class="hljs-keyword">build</span>/package/<span class="hljs-keyword">is</span>.js<span class="hljs-string">&quot;,</span><br><span class="hljs-string">    &quot;</span>./jsx<span class="hljs-string">&quot;: &quot;</span>./<span class="hljs-keyword">build</span>/package/jsx.js<span class="hljs-string">&quot;,</span><br><span class="hljs-string">    &quot;</span>./modules/attributes<span class="hljs-string">&quot;: &quot;</span>./<span class="hljs-keyword">build</span>/package/modules/attributes.js<span class="hljs-string">&quot;,</span><br><span class="hljs-string">    &quot;</span>./modules/class<span class="hljs-string">&quot;: &quot;</span>./<span class="hljs-keyword">build</span>/package/modules/class.js<span class="hljs-string">&quot;,</span><br><span class="hljs-string">    &quot;</span>./modules/<span class="hljs-keyword">dataset</span><span class="hljs-string">&quot;: &quot;</span>./<span class="hljs-keyword">build</span>/package/modules/<span class="hljs-keyword">dataset</span>.js<span class="hljs-string">&quot;,</span><br><span class="hljs-string">    &quot;</span>./modules/eventlisteners<span class="hljs-string">&quot;: &quot;</span>./<span class="hljs-keyword">build</span>/package/modules/eventlisteners.js<span class="hljs-string">&quot;,</span><br><span class="hljs-string">    &quot;</span>./modules/hero<span class="hljs-string">&quot;: &quot;</span>./<span class="hljs-keyword">build</span>/package/modules/hero.js<span class="hljs-string">&quot;,</span><br><span class="hljs-string">    &quot;</span>./modules/module<span class="hljs-string">&quot;: &quot;</span>./<span class="hljs-keyword">build</span>/package/modules/module.js<span class="hljs-string">&quot;,</span><br><span class="hljs-string">    &quot;</span>./modules/props<span class="hljs-string">&quot;: &quot;</span>./<span class="hljs-keyword">build</span>/package/modules/props.js<span class="hljs-string">&quot;,</span><br><span class="hljs-string">    &quot;</span>./modules/style<span class="hljs-string">&quot;: &quot;</span>./<span class="hljs-keyword">build</span>/package/modules/style.js<span class="hljs-string">&quot;,</span><br><span class="hljs-string">    &quot;</span>./thunk<span class="hljs-string">&quot;: &quot;</span>./<span class="hljs-keyword">build</span>/package/thunk.js<span class="hljs-string">&quot;,</span><br><span class="hljs-string">    &quot;</span>./tovnode<span class="hljs-string">&quot;: &quot;</span>./<span class="hljs-keyword">build</span>/package/tovnode.js<span class="hljs-string">&quot;,</span><br><span class="hljs-string">    &quot;</span>./vnode<span class="hljs-string">&quot;: &quot;</span>./<span class="hljs-keyword">build</span>/package/vnode.js<span class="hljs-string">&quot;</span><br><span class="hljs-string">  &#125;</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>如果使用不支持 package.json 的 exports 字段的打包工具，我们应该把模块的路径写全<ul>
+<li>查看安装的 snabbdom 的目录结构</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> &#123; h &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;snabbdom/build/package/h&#x27;</span><br><span class="hljs-keyword">import</span> &#123; init &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;snabbdom/build/package/init&#x27;</span><br><span class="hljs-keyword">import</span> &#123; classModule &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;snabbdom/build/package/modules/class&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>回顾 Vue 中的 render 函数</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">new</span> <span class="hljs-title class_">Vue</span>(&#123;<br>  router,<br>  store,<br>  <span class="hljs-attr">render</span>: <span class="hljs-function"><span class="hljs-params">h</span> =&gt;</span> <span class="hljs-title function_">h</span>(<span class="hljs-title class_">App</span>)<br>&#125;).$mount(<span class="hljs-string">&#x27;#app&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> &#123; h &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;snabbdom/build/package/h&#x27;</span><br><span class="hljs-keyword">import</span> &#123; init &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;snabbdom/build/package/init&#x27;</span><br><br><span class="hljs-comment">// 使用 init() 函数创建 patch()</span><br><span class="hljs-comment">// init() 的参数是数组，将来可以传入模块，处理属性/样式/事件等</span><br><span class="hljs-keyword">let</span> patch = <span class="hljs-title function_">init</span>([])<br><br><span class="hljs-comment">// 使用 h() 函数创建 vnode</span><br><span class="hljs-keyword">let</span> vnode = <span class="hljs-title function_">h</span>(<span class="hljs-string">&#x27;div.cls&#x27;</span>, [<br>  <span class="hljs-title function_">h</span>(<span class="hljs-string">&#x27;h1&#x27;</span>, <span class="hljs-string">&#x27;Hello Snabbdom&#x27;</span>),<br>  <span class="hljs-title function_">h</span>(<span class="hljs-string">&#x27;p&#x27;</span>, <span class="hljs-string">&#x27;这是段落&#x27;</span>)<br>])<br><br><span class="hljs-keyword">const</span> app = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#app&#x27;</span>)<br><span class="hljs-comment">// 把 vnode 渲染到空的 DOM 元素（替换）</span><br><span class="hljs-comment">// 会返回新的 vnode</span><br><span class="hljs-keyword">let</span> oldVnode = <span class="hljs-title function_">patch</span>(app, vnode)<br><br><span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> &#123;<br>  vnode = <span class="hljs-title function_">h</span>(<span class="hljs-string">&#x27;div.cls&#x27;</span>, [<br>    <span class="hljs-title function_">h</span>(<span class="hljs-string">&#x27;h1&#x27;</span>, <span class="hljs-string">&#x27;Hello World&#x27;</span>),<br>    <span class="hljs-title function_">h</span>(<span class="hljs-string">&#x27;p&#x27;</span>, <span class="hljs-string">&#x27;这是段落&#x27;</span>)<br>  ])<br>  <span class="hljs-comment">// 把老的视图更新到新的状态</span><br>  oldVnode = <span class="hljs-title function_">patch</span>(oldVnode, vnode)<br>  <span class="hljs-comment">// h(&#x27;!&#x27;) 是创建注释</span><br>  <span class="hljs-title function_">patch</span>(oldVnode, <span class="hljs-title function_">h</span>(<span class="hljs-string">&#x27;!&#x27;</span>))<br>&#125;, <span class="hljs-number">2000</span>)<br></code></pre></td></tr></table></figure>
+
+<h2 id="模块"><a href="#模块" class="headerlink" title="模块"></a>模块</h2><p>Snabbdom 的核心库并不能处理 DOM 元素的属性&#x2F;样式&#x2F;事件等，如果需要处理的话，可以使用模块</p>
+<h3 id="常用模块"><a href="#常用模块" class="headerlink" title="常用模块"></a>常用模块</h3><ul>
+<li><p>官方提供了 6 个模块</p>
+<ul>
+<li>attributes<ul>
+<li>设置 DOM 元素的属性，使用 <code>setAttribute</code>()</li>
+<li>处理布尔类型的属性</li>
+</ul>
+</li>
+<li>props<ul>
+<li>和 <code>attributes</code> 模块相似，设置 DOM 元素的属性 <code>element[attr] = value</code></li>
+<li>不处理布尔类型的属性</li>
+</ul>
+</li>
+<li>class<ul>
+<li>切换类样式</li>
+<li>注意：给元素设置类样式是通过 <code>sel</code> 选择器</li>
+</ul>
+</li>
+<li>dataset<ul>
+<li>设置 <code>data-*</code> 的自定义属性</li>
+</ul>
+</li>
+<li>eventlisteners<ul>
+<li>注册和移除事件</li>
+</ul>
+</li>
+<li>style<ul>
+<li>设置行内样式，支持动画</li>
+<li>delayed&#x2F;remove&#x2F;destroy</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="模块使用"><a href="#模块使用" class="headerlink" title="模块使用"></a>模块使用</h3><ul>
+<li>模块使用步骤：<ul>
+<li>导入需要的模块</li>
+<li>init() 中注册模块</li>
+<li>使用 h() 函数创建 VNode 的时候，可以把第二个参数设置为对象，其他参数往后移</li>
+</ul>
+</li>
+</ul>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> &#123; h &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;snabbdom/build/package/h&#x27;</span><br><span class="hljs-keyword">import</span> &#123; init &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;snabbdom/build/package/init&#x27;</span><br><span class="hljs-comment">// 导入需要的模块</span><br><span class="hljs-keyword">import</span> &#123; styleModule &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;snabbdom/build/package/modules/style&#x27;</span><br><span class="hljs-keyword">import</span> &#123; eventListenersModule &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;snabbdom/build/package/modules/eventlisteners&#x27;</span><br><br><span class="hljs-comment">// 使用 init() 函数创建 patch()</span><br><span class="hljs-comment">// init() 的参数是数组，将来可以传入模块，处理属性/样式/事件等</span><br><span class="hljs-keyword">let</span> patch = <span class="hljs-title function_">init</span>([<br>  <span class="hljs-comment">// 注册模块</span><br>  styleModule,<br>  eventListenersModule<br>])<br><br><span class="hljs-comment">// 使用 h() 函数创建 vnode</span><br><span class="hljs-keyword">let</span> vnode = <span class="hljs-title function_">h</span>(<span class="hljs-string">&#x27;div.cls&#x27;</span>, &#123;<br>  <span class="hljs-comment">// 设置 DOM 元素的行内样式</span><br>  <span class="hljs-attr">style</span>: &#123; <span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;#DEDEDE&#x27;</span>, <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;#181A1B&#x27;</span> &#125;,<br>  <span class="hljs-comment">// 注册事件</span><br>  <span class="hljs-attr">on</span>: &#123; <span class="hljs-attr">click</span>: clickHandler &#125;<br>&#125;, [<br>  <span class="hljs-title function_">h</span>(<span class="hljs-string">&#x27;h1&#x27;</span>, <span class="hljs-string">&#x27;Hello Snabbdom&#x27;</span>),<br>  <span class="hljs-title function_">h</span>(<span class="hljs-string">&#x27;p&#x27;</span>, <span class="hljs-string">&#x27;这是段落&#x27;</span>)<br>])<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">clickHandler</span> () &#123;<br>  <span class="hljs-comment">// 此处的 this 指向对应的 vnode</span><br>  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">elm</span>.<span class="hljs-property">innerHTML</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h1 id="Snabbdom-源码解析"><a href="#Snabbdom-源码解析" class="headerlink" title="Snabbdom 源码解析"></a>Snabbdom 源码解析</h1><h3 id="Snabbdom-的核心"><a href="#Snabbdom-的核心" class="headerlink" title="Snabbdom 的核心"></a>Snabbdom 的核心</h3><ul>
+<li>使用 h() 函数创建 JavaScript 对象(VNode)描述真实 DOM</li>
+<li>init() 设置模块，创建 patch()</li>
+<li>patch() 比较新旧两个 VNode</li>
+<li>把变化的内容更新到真实 DOM 树上</li>
+</ul>
+<h3 id="Snabbdom-源码"><a href="#Snabbdom-源码" class="headerlink" title="Snabbdom 源码"></a>Snabbdom 源码</h3><ul>
+<li><p>源码地址：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/snabbdom/snabbdom">https://github.com/snabbdom/snabbdom</a></li>
+</ul>
+</li>
+<li><p>src 目录结构</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs vim">├── package<br>│   ├── helpers<br>│   │   └── attachto.<span class="hljs-keyword">ts</span>		定义了 vnode.<span class="hljs-keyword">ts</span> 中 AttachData 的数据结构<br>│   ├── modules<br>│   │   ├── attributes.<span class="hljs-keyword">ts</span><br>│   │   ├── class.<span class="hljs-keyword">ts</span><br>│   │   ├── dataset.<span class="hljs-keyword">ts</span><br>│   │   ├── eventlisteners.<span class="hljs-keyword">ts</span><br>│   │   ├── hero.<span class="hljs-keyword">ts</span>				example 中使用到的自定义钩子<br>│   │   ├── module.<span class="hljs-keyword">ts</span>			定义了模块中用到的钩子函数<br>│   │   ├── props.<span class="hljs-keyword">ts</span><br>│   │   └── style.<span class="hljs-keyword">ts</span><br>│   ├── h.<span class="hljs-keyword">ts</span>							h() 函数，用来创建 VNode<br>│   ├── hooks.<span class="hljs-keyword">ts</span>					所有钩子函数的定义<br>│   ├── htmldomapi.<span class="hljs-keyword">ts</span>			对 DOM API 的包装<br>│   ├── init.<span class="hljs-keyword">ts</span>						加载 modules、DOMAPI，返回 patch 函数<br>│   ├── <span class="hljs-keyword">is</span>.<span class="hljs-keyword">ts</span>							判断数组和原始值的函数<br>│   ├── jsx-<span class="hljs-keyword">global</span>.<span class="hljs-keyword">ts</span>			jsx 的类型声明文件<br>│   ├── jsx.<span class="hljs-keyword">ts</span>						处理 jsx<br>│   ├── thunk.<span class="hljs-keyword">ts</span>					优化处理，对复杂视图不可变值得优化<br>│   ├── tovnode.<span class="hljs-keyword">ts</span>				DOM 转换成 VNode<br>│   ├── <span class="hljs-keyword">ts</span>-transform-js-extension.cjs<br>│   ├── tsconfig.json			<span class="hljs-keyword">ts</span> 的编译配置文件<br>│   └── vnode.<span class="hljs-keyword">ts</span>					虚拟节点定义<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="h-函数"><a href="#h-函数" class="headerlink" title="h 函数"></a>h 函数</h2><ul>
+<li><p>h() 函数介绍</p>
+<ul>
+<li><p>在使用 Vue 的时候见过 h() 函数</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">new</span> <span class="hljs-title class_">Vue</span>(&#123;<br>  router,<br>  store,<br>  <span class="hljs-attr">render</span>: <span class="hljs-function"><span class="hljs-params">h</span> =&gt;</span> <span class="hljs-title function_">h</span>(<span class="hljs-title class_">App</span>)<br>&#125;).$mount(<span class="hljs-string">&#x27;#app&#x27;</span>)<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>h() 函数最早见于 <a target="_blank" rel="noopener" href="https://github.com/hyperhype/hyperscript">hyperscript</a>，使用 JavaScript 创建超文本</p>
+</li>
+<li><p>Snabbdom 中的 h() 函数不是用来创建超文本，而是创建 VNode</p>
+</li>
+</ul>
+</li>
+<li><p>函数重载</p>
+<ul>
+<li><p>概念</p>
+<ul>
+<li><strong>参数个数</strong>或<strong>类型</strong>不同的函数</li>
+<li>JavaScript 中没有重载的概念</li>
+<li>TypeScript 中有重载，不过重载的实现还是通过代码调整参数</li>
+</ul>
+</li>
+<li><p>重载的示意</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">function</span> <span class="hljs-title function_">add</span> (<span class="hljs-attr">a</span>: number, <span class="hljs-attr">b</span>: number) &#123;<br>  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(a + b)<br>&#125;<br><span class="hljs-keyword">function</span> <span class="hljs-title function_">add</span> (<span class="hljs-attr">a</span>: number, <span class="hljs-attr">b</span>: number, <span class="hljs-attr">c</span>: number) &#123;<br>  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(a + b + c)<br>&#125;<br><span class="hljs-title function_">add</span>(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>)<br><span class="hljs-title function_">add</span>(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>)<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">function</span> <span class="hljs-title function_">add</span> (<span class="hljs-attr">a</span>: number, <span class="hljs-attr">b</span>: number) &#123;<br>  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(a + b)<br>&#125;<br><span class="hljs-keyword">function</span> <span class="hljs-title function_">add</span> (<span class="hljs-attr">a</span>: number, <span class="hljs-attr">b</span>: string) &#123;<br>  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(a + b)<br>&#125;<br><span class="hljs-title function_">add</span>(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>)<br><span class="hljs-title function_">add</span>(<span class="hljs-number">1</span>, <span class="hljs-string">&#x27;2&#x27;</span>)<br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>源码位置：src&#x2F;package&#x2F;h.ts</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// h 函数的重载</span><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">h</span> (<span class="hljs-attr">sel</span>: string): <span class="hljs-title class_">VNode</span><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">h</span> (<span class="hljs-attr">sel</span>: string, <span class="hljs-attr">data</span>: <span class="hljs-title class_">VNodeData</span> | <span class="hljs-literal">null</span>): <span class="hljs-title class_">VNode</span><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">h</span> (<span class="hljs-attr">sel</span>: string, <span class="hljs-attr">children</span>: <span class="hljs-title class_">VNodeChildren</span>): <span class="hljs-title class_">VNode</span><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">h</span> (<span class="hljs-attr">sel</span>: string, <span class="hljs-attr">data</span>: <span class="hljs-title class_">VNodeData</span> | <span class="hljs-literal">null</span>, <span class="hljs-attr">children</span>: <span class="hljs-title class_">VNodeChildren</span>): <span class="hljs-title class_">VNode</span><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">h</span> (<span class="hljs-attr">sel</span>: any, b?: any, c?: any): <span class="hljs-title class_">VNode</span> &#123;<br>  <span class="hljs-keyword">var</span> <span class="hljs-attr">data</span>: <span class="hljs-title class_">VNodeData</span> = &#123;&#125;<br>  <span class="hljs-keyword">var</span> <span class="hljs-attr">children</span>: any<br>  <span class="hljs-keyword">var</span> <span class="hljs-attr">text</span>: any<br>  <span class="hljs-keyword">var</span> <span class="hljs-attr">i</span>: number<br>  <span class="hljs-comment">// 处理参数，实现重载的机制</span><br>  <span class="hljs-keyword">if</span> (c !== <span class="hljs-literal">undefined</span>) &#123;<br>    <span class="hljs-comment">// 处理三个参数的情况</span><br>    <span class="hljs-comment">// sel、data、children/text</span><br>    <span class="hljs-keyword">if</span> (b !== <span class="hljs-literal">null</span>) &#123;<br>      data = b<br>    &#125;<br>    <span class="hljs-keyword">if</span> (is.<span class="hljs-title function_">array</span>(c)) &#123;<br>      children = c<br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (is.<span class="hljs-title function_">primitive</span>(c)) &#123;<br>      text = c<br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (c &amp;&amp; c.<span class="hljs-property">sel</span>) &#123;<br>      children = [c]<br>    &#125;<br>  &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (b !== <span class="hljs-literal">undefined</span> &amp;&amp; b !== <span class="hljs-literal">null</span>) &#123;<br>    <span class="hljs-keyword">if</span> (is.<span class="hljs-title function_">array</span>(b)) &#123;<br>      children = b<br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (is.<span class="hljs-title function_">primitive</span>(b)) &#123;<br>      <span class="hljs-comment">// 如果 c 是字符串或者数字</span><br>      text = b<br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (b &amp;&amp; b.<span class="hljs-property">sel</span>) &#123;<br>      <span class="hljs-comment">// 如果 b 是 VNode</span><br>      children = [b]<br>    &#125; <span class="hljs-keyword">else</span> &#123; data = b &#125;<br>  &#125;<br>  <span class="hljs-keyword">if</span> (children !== <span class="hljs-literal">undefined</span>) &#123;<br>    <span class="hljs-comment">// 处理 children 中的原始值(string/number)</span><br>    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; children.<span class="hljs-property">length</span>; ++i) &#123;<br>      <span class="hljs-comment">// 如果 child 是 string/number，创建文本节点</span><br>      <span class="hljs-keyword">if</span> (is.<span class="hljs-title function_">primitive</span>(children[i])) children[i] = <span class="hljs-title function_">vnode</span>(<span class="hljs-literal">undefined</span>, <span class="hljs-literal">undefined</span>, <span class="hljs-literal">undefined</span>, children[i], <span class="hljs-literal">undefined</span>)<br>    &#125;<br>  &#125;<br>  <span class="hljs-keyword">if</span> (<br>    sel[<span class="hljs-number">0</span>] === <span class="hljs-string">&#x27;s&#x27;</span> &amp;&amp; sel[<span class="hljs-number">1</span>] === <span class="hljs-string">&#x27;v&#x27;</span> &amp;&amp; sel[<span class="hljs-number">2</span>] === <span class="hljs-string">&#x27;g&#x27;</span> &amp;&amp;<br>    (sel.<span class="hljs-property">length</span> === <span class="hljs-number">3</span> || sel[<span class="hljs-number">3</span>] === <span class="hljs-string">&#x27;.&#x27;</span> || sel[<span class="hljs-number">3</span>] === <span class="hljs-string">&#x27;#&#x27;</span>)<br>  ) &#123;<br>    <span class="hljs-comment">// 如果是 svg，添加命名空间</span><br>    <span class="hljs-title function_">addNS</span>(data, children, sel)<br>  &#125;<br>  <span class="hljs-comment">// 返回 VNode</span><br>  <span class="hljs-keyword">return</span> <span class="hljs-title function_">vnode</span>(sel, data, children, text, <span class="hljs-literal">undefined</span>)<br>&#125;;<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="VNode"><a href="#VNode" class="headerlink" title="VNode"></a>VNode</h2><ul>
+<li><p>一个 VNode 就是一个虚拟节点用来描述一个 DOM 元素，如果这个 VNode 有 children 就是 Virtual DOM </p>
+</li>
+<li><p>源码位置：src&#x2F;package&#x2F;vnode.ts</p>
+</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">export</span> interface <span class="hljs-title class_">VNode</span> &#123;<br>  <span class="hljs-comment">// 选择器</span><br>  <span class="hljs-attr">sel</span>: string | <span class="hljs-literal">undefined</span>;<br>  <span class="hljs-comment">// 节点数据：属性/样式/事件等</span><br>  <span class="hljs-attr">data</span>: <span class="hljs-title class_">VNodeData</span> | <span class="hljs-literal">undefined</span>;<br>  <span class="hljs-comment">// 子节点，和 text 只能互斥</span><br>  <span class="hljs-attr">children</span>: <span class="hljs-title class_">Array</span>&lt;<span class="hljs-title class_">VNode</span> | string&gt; | <span class="hljs-literal">undefined</span>;<br>  <span class="hljs-comment">// 记录 vnode 对应的真实 DOM</span><br>  <span class="hljs-attr">elm</span>: <span class="hljs-title class_">Node</span> | <span class="hljs-literal">undefined</span>;<br>  <span class="hljs-comment">// 节点中的内容，和 children 只能互斥</span><br>  <span class="hljs-attr">text</span>: string | <span class="hljs-literal">undefined</span>;<br>  <span class="hljs-comment">// 优化用</span><br>  <span class="hljs-attr">key</span>: <span class="hljs-title class_">Key</span> | <span class="hljs-literal">undefined</span>;<br>&#125;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">vnode</span> (<span class="hljs-attr">sel</span>: string | <span class="hljs-literal">undefined</span>,<br>                      <span class="hljs-attr">data</span>: any | <span class="hljs-literal">undefined</span>,<br>                      <span class="hljs-attr">children</span>: <span class="hljs-title class_">Array</span>&lt;<span class="hljs-title class_">VNode</span> | string&gt; | <span class="hljs-literal">undefined</span>,<br>                      <span class="hljs-attr">text</span>: string | <span class="hljs-literal">undefined</span>,<br>                      <span class="hljs-attr">elm</span>: <span class="hljs-title class_">Element</span> | <span class="hljs-title class_">Text</span> | <span class="hljs-literal">undefined</span>): <span class="hljs-title class_">VNode</span> &#123;<br>  <span class="hljs-keyword">const</span> key = data === <span class="hljs-literal">undefined</span> ? <span class="hljs-literal">undefined</span> : data.<span class="hljs-property">key</span><br>  <span class="hljs-keyword">return</span> &#123; sel, data, children, text, elm, key &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="snabbdom"><a href="#snabbdom" class="headerlink" title="snabbdom"></a>snabbdom</h2><ul>
+<li>patch(oldVnode, newVnode)</li>
+<li>打补丁，把新节点中变化的内容渲染到真实 DOM，最后返回新节点作为下一次处理的旧节点</li>
+<li>对比新旧 VNode 是否相同节点(节点的 key 和 sel 相同)</li>
+<li>如果不是相同节点，删除之前的内容，重新渲染</li>
+<li>如果是相同节点，再判断新的 VNode 是否有 text，如果有并且和 oldVnode 的 text 不同，直接更新文本内容</li>
+<li>如果新的 VNode 有 children，判断子节点是否有变化，判断子节点的过程使用的就是 diff 算法</li>
+<li>diff 过程只进行同层级比较</li>
+</ul>
+<p><img src="/img/assets/image-20200102103653779.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="init"><a href="#init" class="headerlink" title="init"></a>init</h3><ul>
+<li><p><strong>功能：</strong>init(modules, domApi)，返回 patch() 函数（高阶函数）</p>
+</li>
+<li><p>为什么要使用高阶函数？</p>
+<ul>
+<li>因为 patch() 函数再外部会调用多次，每次调用依赖一些参数，比如：modules&#x2F;domApi&#x2F;cbs</li>
+<li>通过高阶函数让 init() 内部形成闭包，返回的 patch() 可以访问到 modules&#x2F;domApi&#x2F;cbs，而不需要重新创建</li>
+</ul>
+</li>
+<li><p>init() 在返回 patch() 之前，首先收集了所有模块中的钩子函数存储到 cbs 对象中</p>
+</li>
+<li><p>源码位置：src&#x2F;package&#x2F;init.ts</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> <span class="hljs-attr">hooks</span>: <span class="hljs-title class_">Array</span>&lt;keyof <span class="hljs-title class_">Module</span>&gt; = [<span class="hljs-string">&#x27;create&#x27;</span>, <span class="hljs-string">&#x27;update&#x27;</span>, <span class="hljs-string">&#x27;remove&#x27;</span>, <span class="hljs-string">&#x27;destroy&#x27;</span>, <span class="hljs-string">&#x27;pre&#x27;</span>, <span class="hljs-string">&#x27;post&#x27;</span>]<br><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">init</span> (<span class="hljs-attr">modules</span>: <span class="hljs-title class_">Array</span>&lt;<span class="hljs-title class_">Partial</span>&lt;<span class="hljs-title class_">Module</span>&gt;&gt;, domApi?: <span class="hljs-variable constant_">DOMAPI</span>) &#123;<br>  <span class="hljs-keyword">let</span> <span class="hljs-attr">i</span>: number<br>  <span class="hljs-keyword">let</span> <span class="hljs-attr">j</span>: number<br>  <span class="hljs-keyword">const</span> <span class="hljs-attr">cbs</span>: <span class="hljs-title class_">ModuleHooks</span> = &#123;<br>    <span class="hljs-attr">create</span>: [],<br>    <span class="hljs-attr">update</span>: [],<br>    <span class="hljs-attr">remove</span>: [],<br>    <span class="hljs-attr">destroy</span>: [],<br>    <span class="hljs-attr">pre</span>: [],<br>    <span class="hljs-attr">post</span>: []<br>  &#125;<br>  <span class="hljs-comment">// 初始化 api</span><br>  <span class="hljs-keyword">const</span> <span class="hljs-attr">api</span>: <span class="hljs-variable constant_">DOMAPI</span> = domApi !== <span class="hljs-literal">undefined</span> ? domApi : htmlDomApi<br>  <span class="hljs-comment">// 把传入的所有模块的钩子方法，统一存储到 cbs 对象中</span><br>  <span class="hljs-comment">// 最终构建的 cbs 对象的形式 cbs = [ create: [fn1, fn2], update: [], ... ]</span><br>	<span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; hooks.<span class="hljs-property">length</span>; ++i) &#123;<br>    <span class="hljs-comment">// cbs[&#x27;create&#x27;] = []</span><br>    cbs[hooks[i]] = []<br>    <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>; j &lt; modules.<span class="hljs-property">length</span>; ++j) &#123;<br>      <span class="hljs-comment">// const hook = modules[0][&#x27;create&#x27;]</span><br>      <span class="hljs-keyword">const</span> hook = modules[j][hooks[i]]<br>      <span class="hljs-keyword">if</span> (hook !== <span class="hljs-literal">undefined</span>) &#123;<br>        (cbs[hooks[i]] <span class="hljs-keyword">as</span> any[]).<span class="hljs-title function_">push</span>(hook)<br>      &#125;<br>    &#125;<br>  &#125;<br>  ……<br>  <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">patch</span> (<span class="hljs-attr">oldVnode</span>: <span class="hljs-title class_">VNode</span> | <span class="hljs-title class_">Element</span>, <span class="hljs-attr">vnode</span>: <span class="hljs-title class_">VNode</span>): <span class="hljs-title class_">VNode</span> &#123;<br>    ……<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="patch"><a href="#patch" class="headerlink" title="patch"></a>patch</h3><ul>
+<li><p><strong>功能：</strong></p>
+<ul>
+<li>传入新旧 VNode，对比差异，把差异渲染到 DOM</li>
+<li>返回新的 VNode，作为下一次 patch() 的 oldVnode</li>
+</ul>
+</li>
+<li><p><strong>执行过程：</strong></p>
+<ul>
+<li>首先执行<strong>模块</strong>中的<strong>钩子</strong>函数 <code>pre</code></li>
+<li>如果 oldVnode 和 vnode 相同（key 和 sel 相同）<ul>
+<li>调用 patchVnode()，找节点的差异并更新 DOM</li>
+</ul>
+</li>
+<li>如果 oldVnode 是 DOM 元素<ul>
+<li>把 DOM 元素转换成 oldVnode</li>
+<li>调用 createElm() 把 vnode 转换为真实 DOM，记录到 vnode.elm</li>
+<li>把刚创建的 DOM 元素插入到 parent 中</li>
+<li>移除老节点</li>
+<li>触发<strong>用户</strong>设置的 <code>create </code> <strong>钩子</strong>函数</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>源码位置：src&#x2F;package&#x2F;init.ts</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">patch</span> (<span class="hljs-attr">oldVnode</span>: <span class="hljs-title class_">VNode</span> | <span class="hljs-title class_">Element</span>, <span class="hljs-attr">vnode</span>: <span class="hljs-title class_">VNode</span>): <span class="hljs-title class_">VNode</span> &#123;<br>  <span class="hljs-keyword">let</span> <span class="hljs-attr">i</span>: number, <span class="hljs-attr">elm</span>: <span class="hljs-title class_">Node</span>, <span class="hljs-attr">parent</span>: <span class="hljs-title class_">Node</span><br>  <span class="hljs-comment">// 保存新插入节点的队列，为了触发钩子函数</span><br>  <span class="hljs-keyword">const</span> <span class="hljs-attr">insertedVnodeQueue</span>: <span class="hljs-title class_">VNodeQueue</span> = []<br>  <span class="hljs-comment">// 执行模块的 pre 钩子函数</span><br>  <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; cbs.<span class="hljs-property">pre</span>.<span class="hljs-property">length</span>; ++i) cbs.<span class="hljs-property">pre</span>[i]()<br>	<span class="hljs-comment">// 如果 oldVnode 不是 VNode，创建 VNode 并设置 elm </span><br>  <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">isVnode</span>(oldVnode)) &#123;<br>    <span class="hljs-comment">// 把 DOM 元素转换成空的 VNode</span><br>    oldVnode = <span class="hljs-title function_">emptyNodeAt</span>(oldVnode)<br>  &#125;<br>	<span class="hljs-comment">// 如果新旧节点是相同节点(key 和 sel 相同)</span><br>  <span class="hljs-keyword">if</span> (<span class="hljs-title function_">sameVnode</span>(oldVnode, vnode)) &#123;<br>    <span class="hljs-comment">// 找节点的差异并更新 DOM</span><br>    <span class="hljs-title function_">patchVnode</span>(oldVnode, vnode, insertedVnodeQueue)<br>  &#125; <span class="hljs-keyword">else</span> &#123;<br>    <span class="hljs-comment">// 如果新旧节点不同，vnode 创建对应的 DOM</span><br>    <span class="hljs-comment">// 获取当前的 DOM 元素</span><br>    elm = oldVnode.<span class="hljs-property">elm</span>!<br>    parent = api.<span class="hljs-title function_">parentNode</span>(elm) <span class="hljs-keyword">as</span> <span class="hljs-title class_">Node</span><br>		<span class="hljs-comment">// 触发 init/create 钩子函数,创建 DOM</span><br>    <span class="hljs-title function_">createElm</span>(vnode, insertedVnodeQueue)<br><br>    <span class="hljs-keyword">if</span> (parent !== <span class="hljs-literal">null</span>) &#123;<br>      <span class="hljs-comment">// 如果父节点不为空，把 vnode 对应的 DOM 插入到文档中</span><br>      api.<span class="hljs-title function_">insertBefore</span>(parent, vnode.<span class="hljs-property">elm</span>!, api.<span class="hljs-title function_">nextSibling</span>(elm))<br>      <span class="hljs-comment">// 移除老节点</span><br>      <span class="hljs-title function_">removeVnodes</span>(parent, [oldVnode], <span class="hljs-number">0</span>, <span class="hljs-number">0</span>)<br>    &#125;<br>  &#125;<br>	<span class="hljs-comment">// 执行用户设置的 insert 钩子函数</span><br>  <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; insertedVnodeQueue.<span class="hljs-property">length</span>; ++i) &#123;<br>    insertedVnodeQueue[i].<span class="hljs-property">data</span>!.<span class="hljs-property">hook</span>!.<span class="hljs-property">insert</span>!(insertedVnodeQueue[i])<br>  &#125;<br>  <span class="hljs-comment">// 执行模块的 post 钩子函数</span><br>  <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; cbs.<span class="hljs-property">post</span>.<span class="hljs-property">length</span>; ++i) cbs.<span class="hljs-property">post</span>[i]()<br>  <span class="hljs-keyword">return</span> vnode<br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="createElm"><a href="#createElm" class="headerlink" title="createElm"></a>createElm</h3><ul>
+<li><p><strong>功能：</strong></p>
+<ul>
+<li>createElm(vnode, insertedVnodeQueue)，返回创建的 DOM 元素</li>
+<li>创建 vnode 对应的 DOM 元素</li>
+</ul>
+</li>
+<li><p><strong>执行过程：</strong></p>
+<ul>
+<li>首先触发<strong>用户</strong>设置的 <strong>init</strong> <strong>钩子</strong>函数</li>
+<li>如果选择器是!，创建评论节点</li>
+<li>如果选择器为空，创建文本节点</li>
+<li>如果选择器不为空<ul>
+<li>解析选择器，设置标签的 id 和 class 属性</li>
+<li>执行<strong>模块</strong>的 <strong>create</strong> <strong>钩子</strong>函数</li>
+<li>如果 vnode 有 children，创建子 vnode 对应的 DOM，追加到 DOM 树</li>
+<li>如果 vnode 的 text 值是 string&#x2F;number，创建文本节点并追击到 DOM 树</li>
+<li>执行<strong>用户</strong>设置的 <strong>create</strong> <strong>钩子</strong>函数</li>
+<li>如果有用户设置的 insert 钩子函数，把 vnode 添加到队列中</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>源码位置：src&#x2F;package&#x2F;init.ts</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">function</span> <span class="hljs-title function_">createElm</span> (<span class="hljs-attr">vnode</span>: <span class="hljs-title class_">VNode</span>, <span class="hljs-attr">insertedVnodeQueue</span>: <span class="hljs-title class_">VNodeQueue</span>): <span class="hljs-title class_">Node</span> &#123;<br>  <span class="hljs-keyword">let</span> <span class="hljs-attr">i</span>: any<br>  <span class="hljs-keyword">let</span> data = vnode.<span class="hljs-property">data</span><br>  <br>  <span class="hljs-keyword">if</span> (data !== <span class="hljs-literal">undefined</span>) &#123;<br>    <span class="hljs-comment">// 执行用户设置的 init 钩子函数</span><br>    <span class="hljs-keyword">const</span> init = data.<span class="hljs-property">hook</span>?.<span class="hljs-property">init</span><br>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isDef</span>(init)) &#123;<br>      <span class="hljs-title function_">init</span>(vnode)<br>      data = vnode.<span class="hljs-property">data</span><br>    &#125;<br>  &#125;<br>  <span class="hljs-keyword">const</span> children = vnode.<span class="hljs-property">children</span><br>  <span class="hljs-keyword">const</span> sel = vnode.<span class="hljs-property">sel</span><br>  <span class="hljs-keyword">if</span> (sel === <span class="hljs-string">&#x27;!&#x27;</span>) &#123;<br>    <span class="hljs-comment">// 如果选择器是!，创建注释节点</span><br>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isUndef</span>(vnode.<span class="hljs-property">text</span>)) &#123;<br>      vnode.<span class="hljs-property">text</span> = <span class="hljs-string">&#x27;&#x27;</span><br>    &#125;<br>    vnode.<span class="hljs-property">elm</span> = api.<span class="hljs-title function_">createComment</span>(vnode.<span class="hljs-property">text</span>!)<br>  &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (sel !== <span class="hljs-literal">undefined</span>) &#123;<br>    <span class="hljs-comment">// 如果选择器不为空</span><br>    <span class="hljs-comment">// 解析选择器</span><br>    <span class="hljs-comment">// Parse selector</span><br>    <span class="hljs-keyword">const</span> hashIdx = sel.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;#&#x27;</span>)<br>    <span class="hljs-keyword">const</span> dotIdx = sel.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;.&#x27;</span>, hashIdx)<br>    <span class="hljs-keyword">const</span> hash = hashIdx &gt; <span class="hljs-number">0</span> ? hashIdx : sel.<span class="hljs-property">length</span><br>    <span class="hljs-keyword">const</span> dot = dotIdx &gt; <span class="hljs-number">0</span> ? dotIdx : sel.<span class="hljs-property">length</span><br>    <span class="hljs-keyword">const</span> tag = hashIdx !== -<span class="hljs-number">1</span> || dotIdx !== -<span class="hljs-number">1</span> ? sel.<span class="hljs-title function_">slice</span>(<span class="hljs-number">0</span>, <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">min</span>(hash, dot)) : sel<br>    <span class="hljs-keyword">const</span> elm = vnode.<span class="hljs-property">elm</span> = <span class="hljs-title function_">isDef</span>(data) &amp;&amp; <span class="hljs-title function_">isDef</span>(i = data.<span class="hljs-property">ns</span>)<br>      ? api.<span class="hljs-title function_">createElementNS</span>(i, tag)<br>      : api.<span class="hljs-title function_">createElement</span>(tag)<br>    <span class="hljs-keyword">if</span> (hash &lt; dot) elm.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;id&#x27;</span>, sel.<span class="hljs-title function_">slice</span>(hash + <span class="hljs-number">1</span>, dot))<br>    <span class="hljs-keyword">if</span> (dotIdx &gt; <span class="hljs-number">0</span>) elm.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;class&#x27;</span>, sel.<span class="hljs-title function_">slice</span>(dot + <span class="hljs-number">1</span>).<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/\./g</span>, <span class="hljs-string">&#x27; &#x27;</span>))<br>    <span class="hljs-comment">// 执行模块的 create 钩子函数</span><br>    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; cbs.<span class="hljs-property">create</span>.<span class="hljs-property">length</span>; ++i) cbs.<span class="hljs-property">create</span>[i](emptyNode, vnode)<br>    <span class="hljs-comment">// 如果 vnode 中有子节点，创建子 vnode 对应的 DOM 元素并追加到 DOM 树上</span><br>    <span class="hljs-keyword">if</span> (is.<span class="hljs-title function_">array</span>(children)) &#123;<br>      <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; children.<span class="hljs-property">length</span>; ++i) &#123;<br>        <span class="hljs-keyword">const</span> ch = children[i]<br>        <span class="hljs-keyword">if</span> (ch != <span class="hljs-literal">null</span>) &#123;<br>          api.<span class="hljs-title function_">appendChild</span>(elm, <span class="hljs-title function_">createElm</span>(ch <span class="hljs-keyword">as</span> <span class="hljs-title class_">VNode</span>, insertedVnodeQueue))<br>        &#125;<br>      &#125;<br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (is.<span class="hljs-title function_">primitive</span>(vnode.<span class="hljs-property">text</span>)) &#123;<br>      <span class="hljs-comment">// 如果 vnode 的 text 值是 string/number，创建文本节点并追加到 DOM 树</span><br>      api.<span class="hljs-title function_">appendChild</span>(elm, api.<span class="hljs-title function_">createTextNode</span>(vnode.<span class="hljs-property">text</span>))<br>    &#125;<br>    <span class="hljs-keyword">const</span> hook = vnode.<span class="hljs-property">data</span>!.<span class="hljs-property">hook</span><br>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isDef</span>(hook)) &#123;<br>      <span class="hljs-comment">// 执行用户传入的钩子 create</span><br>      hook.<span class="hljs-property">create</span>?.(emptyNode, vnode)<br>      <span class="hljs-keyword">if</span> (hook.<span class="hljs-property">insert</span>) &#123;<br>        <span class="hljs-comment">// 把 vnode 添加到队列中，为后续执行 insert 钩子做准备</span><br>        insertedVnodeQueue.<span class="hljs-title function_">push</span>(vnode)<br>      &#125;<br>    &#125;<br>  &#125; <span class="hljs-keyword">else</span> &#123;<br>    <span class="hljs-comment">// 如果选择器为空，创建文本节点</span><br>    vnode.<span class="hljs-property">elm</span> = api.<span class="hljs-title function_">createTextNode</span>(vnode.<span class="hljs-property">text</span>!)<br>  &#125;<br>  <span class="hljs-comment">// 返回新创建的 DOM                                </span><br>  <span class="hljs-keyword">return</span> vnode.<span class="hljs-property">elm</span><br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="patchVnode"><a href="#patchVnode" class="headerlink" title="patchVnode"></a>patchVnode</h3><ul>
+<li><p><strong>功能：</strong></p>
+<ul>
+<li>patchVnode(oldVnode, vnode, insertedVnodeQueue)</li>
+<li>对比 oldVnode 和 vnode 的差异，把差异渲染到 DOM</li>
+</ul>
+</li>
+<li><p><strong>执行过程：</strong></p>
+<ul>
+<li>首先执行<strong>用户</strong>设置的 <strong>prepatch</strong> <strong>钩子</strong>函数</li>
+<li>执行 create 钩子函数<ul>
+<li>首先执行<strong>模块</strong>的 <strong>create</strong> <strong>钩子</strong>函数</li>
+<li>然后执行<strong>用户</strong>设置的 <strong>create</strong> <strong>钩子</strong>函数</li>
+</ul>
+</li>
+<li>如果 <strong>vnode.text</strong> 未定义<ul>
+<li>如果 <code>oldVnode.children</code> 和 <code>vnode.children</code> 都有值<ul>
+<li>调用 <code>updateChildren()</code></li>
+<li>使用 diff 算法对比子节点，更新子节点</li>
+</ul>
+</li>
+<li>如果 <code>vnode.children</code> 有值，<code>oldVnode.children</code> 无值<ul>
+<li>清空 DOM 元素</li>
+<li>调用 <code>addVnodes()</code>，批量添加子节点</li>
+</ul>
+</li>
+<li>如果 <code>oldVnode.children</code> 有值，<code>vnode.children</code> 无值<ul>
+<li>调用 <code>removeVnodes()</code>，批量移除子节点</li>
+</ul>
+</li>
+<li>如果 <strong>oldVnode.text</strong> 有值<ul>
+<li>清空 DOM 元素的内容</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>如果设置了 <code>vnode.text</code> 并且和和 <code>oldVnode.text</code> 不等<ul>
+<li>如果老节点有子节点，全部移除</li>
+<li>设置 DOM 元素的 <code>textContent</code> 为 <code>vnode.text</code></li>
+</ul>
+</li>
+<li>最后执行用户<strong>设置的</strong> <strong>postpatch</strong> <strong>钩子</strong>函数</li>
+</ul>
+</li>
+<li><p>源码位置：src&#x2F;package&#x2F;init.ts</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">function</span> <span class="hljs-title function_">patchVnode</span> (<span class="hljs-attr">oldVnode</span>: <span class="hljs-title class_">VNode</span>, <span class="hljs-attr">vnode</span>: <span class="hljs-title class_">VNode</span>, <span class="hljs-attr">insertedVnodeQueue</span>: <span class="hljs-title class_">VNodeQueue</span>) &#123;<br>    <span class="hljs-keyword">const</span> hook = vnode.<span class="hljs-property">data</span>?.<span class="hljs-property">hook</span><br>    <span class="hljs-comment">// 首先执行用户设置的 prepatch 钩子函数</span><br>    hook?.<span class="hljs-property">prepatch</span>?.(oldVnode, vnode)<br>    <span class="hljs-keyword">const</span> elm = vnode.<span class="hljs-property">elm</span> = oldVnode.<span class="hljs-property">elm</span>!<br>    <span class="hljs-keyword">const</span> oldCh = oldVnode.<span class="hljs-property">children</span> <span class="hljs-keyword">as</span> <span class="hljs-title class_">VNode</span>[]<br>    <span class="hljs-keyword">const</span> ch = vnode.<span class="hljs-property">children</span> <span class="hljs-keyword">as</span> <span class="hljs-title class_">VNode</span>[]<br>  	<span class="hljs-comment">// 如果新老 vnode 相同返回</span><br>    <span class="hljs-keyword">if</span> (oldVnode === vnode) <span class="hljs-keyword">return</span><br>    <span class="hljs-keyword">if</span> (vnode.<span class="hljs-property">data</span> !== <span class="hljs-literal">undefined</span>) &#123;<br>      <span class="hljs-comment">// 执行模块的 update 钩子函数</span><br>      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; cbs.<span class="hljs-property">update</span>.<span class="hljs-property">length</span>; ++i) cbs.<span class="hljs-property">update</span>[i](oldVnode, vnode)<br>      <span class="hljs-comment">// 执行用户设置的 update 钩子函数</span><br>      vnode.<span class="hljs-property">data</span>.<span class="hljs-property">hook</span>?.<span class="hljs-property">update</span>?.(oldVnode, vnode)<br>    &#125;<br>  	<span class="hljs-comment">// 如果 vnode.text 未定义</span><br>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isUndef</span>(vnode.<span class="hljs-property">text</span>)) &#123;<br>      <span class="hljs-comment">// 如果新老节点都有 children</span><br>      <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isDef</span>(oldCh) &amp;&amp; <span class="hljs-title function_">isDef</span>(ch)) &#123;<br>        <span class="hljs-comment">// 调用 updateChildren 对比子节点，更新子节点</span><br>        <span class="hljs-keyword">if</span> (oldCh !== ch) <span class="hljs-title function_">updateChildren</span>(elm, oldCh, ch, insertedVnodeQueue)<br>      &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isDef</span>(ch)) &#123;<br>        <span class="hljs-comment">// 如果新节点有 children，老节点没有 children</span><br>      	<span class="hljs-comment">// 如果老节点有text，清空dom 元素的内容</span><br>        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isDef</span>(oldVnode.<span class="hljs-property">text</span>)) api.<span class="hljs-title function_">setTextContent</span>(elm, <span class="hljs-string">&#x27;&#x27;</span>)<br>        <span class="hljs-comment">// 批量添加子节点</span><br>        <span class="hljs-title function_">addVnodes</span>(elm, <span class="hljs-literal">null</span>, ch, <span class="hljs-number">0</span>, ch.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>, insertedVnodeQueue)<br>      &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isDef</span>(oldCh)) &#123;<br>        <span class="hljs-comment">// 如果老节点有children，新节点没有children</span><br>      	<span class="hljs-comment">// 批量移除子节点</span><br>        <span class="hljs-title function_">removeVnodes</span>(elm, oldCh, <span class="hljs-number">0</span>, oldCh.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>)<br>      &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isDef</span>(oldVnode.<span class="hljs-property">text</span>)) &#123;<br>        <span class="hljs-comment">// 如果老节点有 text，清空 DOM 元素</span><br>        api.<span class="hljs-title function_">setTextContent</span>(elm, <span class="hljs-string">&#x27;&#x27;</span>)<br>      &#125;<br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (oldVnode.<span class="hljs-property">text</span> !== vnode.<span class="hljs-property">text</span>) &#123;<br>      <span class="hljs-comment">// 如果没有设置 vnode.text</span><br>      <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isDef</span>(oldCh)) &#123;<br>        <span class="hljs-comment">// 如果老节点有 children，移除</span><br>        <span class="hljs-title function_">removeVnodes</span>(elm, oldCh, <span class="hljs-number">0</span>, oldCh.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>)<br>      &#125;<br>      <span class="hljs-comment">// 设置 DOM 元素的 textContent 为 vnode.text</span><br>      api.<span class="hljs-title function_">setTextContent</span>(elm, vnode.<span class="hljs-property">text</span>!)<br>    &#125;<br>    <span class="hljs-comment">// 最后执行用户设置的 postpatch 钩子函数</span><br>    hook?.<span class="hljs-property">postpatch</span>?.(oldVnode, vnode)<br>  &#125;<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="updateChildren"><a href="#updateChildren" class="headerlink" title="updateChildren"></a>updateChildren</h3><ul>
+<li><p><strong>功能：</strong></p>
+<ul>
+<li>diff 算法的核心，对比新旧节点的 children，更新 DOM</li>
+</ul>
+</li>
+<li><p><strong>执行过程：</strong></p>
+<ul>
+<li>要对比两棵树的差异，我们可以取第一棵树的每一个节点依次和第二课树的每一个节点比较，但是这样的时间复杂度为 O(n^3)</li>
+<li>在DOM 操作的时候我们很少很少会把一个父节点移动&#x2F;更新到某一个子节点</li>
+<li>因此只需要找<strong>同级别</strong>的子<strong>节点</strong>依次<strong>比较</strong>，然后再找下一级别的节点比较，这样算法的时间复杂度为 O(n)</li>
+</ul>
+<p><img src="/img/assets/image-20200102103653779.png" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li>在进行同级别节点比较的时候，首先会对新老节点数组的开始和结尾节点设置标记索引，遍历的过程中移动索引</li>
+<li>在对<strong>开始和结束节点</strong>比较的时候，总共有四种情况<ul>
+<li>oldStartVnode &#x2F; newStartVnode (旧开始节点 &#x2F; 新开始节点)</li>
+<li>oldEndVnode &#x2F; newEndVnode (旧结束节点 &#x2F; 新结束节点)</li>
+<li>oldStartVnode &#x2F; oldEndVnode (旧开始节点 &#x2F; 新结束节点)</li>
+<li>oldEndVnode &#x2F; newStartVnode (旧结束节点 &#x2F; 新开始节点)</li>
+</ul>
+</li>
+</ul>
+<p><img src="/img/assets/image-20200109184608649.png" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li>开始节点和结束节点比较，这两种情况类似<ul>
+<li>oldStartVnode &#x2F; newStartVnode (旧开始节点 &#x2F; 新开始节点)</li>
+<li>oldEndVnode &#x2F; newEndVnode (旧结束节点 &#x2F; 新结束节点)</li>
+</ul>
+</li>
+<li>如果 oldStartVnode 和 newStartVnode 是 sameVnode (key 和 sel 相同)<ul>
+<li>调用 patchVnode() 对比和更新节点</li>
+<li>把旧开始和新开始索引往后移动  oldStartIdx++ &#x2F; oldEndIdx++</li>
+</ul>
+</li>
+</ul>
+<p><img src="/img/assets/image-20200103121812840.png" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li>oldStartVnode &#x2F; newEndVnode (旧开始节点 &#x2F; 新结束节点) 相同<br>- 调用 patchVnode() 对比和更新节点<ul>
+<li>把 oldStartVnode 对应的 DOM 元素，移动到右边<br>- 更新索引</li>
+</ul>
+</li>
+</ul>
+<p><img src="/img/assets/image-20200103125428541.png" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li>oldEndVnode &#x2F; newStartVnode (旧结束节点 &#x2F; 新开始节点) 相同<ul>
+<li>调用 patchVnode() 对比和更新节点</li>
+<li>把 oldEndVnode 对应的 DOM 元素，移动到左边</li>
+<li>更新索引</li>
+</ul>
+</li>
+</ul>
+<p><img src="/img/assets/image-20200103125735048.png" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li>如果不是以上四种情况<ul>
+<li>遍历新节点，使用 newStartNode 的 key 在老节点数组中找相同节点</li>
+<li>如果没有找到，说明 newStartNode 是新节点<ul>
+<li>创建新节点对应的 DOM 元素，插入到 DOM 树中</li>
+</ul>
+</li>
+<li>如果找到了<ul>
+<li>判断新节点和找到的老节点的 sel 选择器是否相同</li>
+<li>如果不相同，说明节点被修改了<ul>
+<li>重新创建对应的 DOM 元素，插入到 DOM 树中</li>
+</ul>
+</li>
+<li>如果相同，把 elmToMove 对应的 DOM 元素，移动到左边</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/img/assets/image-20200109184822439.png" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li>循环结束<ul>
+<li>当老节点的所有子节点先遍历完 (oldStartIdx &gt; oldEndIdx)，循环结束</li>
+<li>新节点的所有子节点先遍历完 (newStartIdx &gt; newEndIdx)，循环结束</li>
+</ul>
+</li>
+<li>如果老节点的数组先遍历完(oldStartIdx &gt; oldEndIdx)，说明新节点有剩余，把剩余节点批量插入到右边</li>
+</ul>
+<p><img src="/img/assets/image-20200103150918335.png" srcset="/img/loading.gif" lazyload></p>
+<p>​	</p>
+<ul>
+<li>如果新节点的数组先遍历完(newStartIdx &gt; newEndIdx)，说明老节点有剩余，把剩余节点批量删除</li>
+</ul>
+<p><img src="/img/assets/image-20200109194751093.png" srcset="/img/loading.gif" lazyload></p>
+</li>
+<li><p>源码位置：src&#x2F;package&#x2F;init.ts</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">function</span> <span class="hljs-title function_">updateChildren</span> (<span class="hljs-attr">parentElm</span>: <span class="hljs-title class_">Node</span>,<br>  <span class="hljs-attr">oldCh</span>: <span class="hljs-title class_">VNode</span>[],<br>  <span class="hljs-attr">newCh</span>: <span class="hljs-title class_">VNode</span>[],<br>  <span class="hljs-attr">insertedVnodeQueue</span>: <span class="hljs-title class_">VNodeQueue</span>) &#123;<br>  <span class="hljs-keyword">let</span> oldStartIdx = <span class="hljs-number">0</span><br>  <span class="hljs-keyword">let</span> newStartIdx = <span class="hljs-number">0</span><br>  <span class="hljs-keyword">let</span> oldEndIdx = oldCh.<span class="hljs-property">length</span> - <span class="hljs-number">1</span><br>  <span class="hljs-keyword">let</span> oldStartVnode = oldCh[<span class="hljs-number">0</span>]<br>  <span class="hljs-keyword">let</span> oldEndVnode = oldCh[oldEndIdx]<br>  <span class="hljs-keyword">let</span> newEndIdx = newCh.<span class="hljs-property">length</span> - <span class="hljs-number">1</span><br>  <span class="hljs-keyword">let</span> newStartVnode = newCh[<span class="hljs-number">0</span>]<br>  <span class="hljs-keyword">let</span> newEndVnode = newCh[newEndIdx]<br>  <span class="hljs-keyword">let</span> <span class="hljs-attr">oldKeyToIdx</span>: <span class="hljs-title class_">KeyToIndexMap</span> | <span class="hljs-literal">undefined</span><br>  <span class="hljs-keyword">let</span> <span class="hljs-attr">idxInOld</span>: number<br>  <span class="hljs-keyword">let</span> <span class="hljs-attr">elmToMove</span>: <span class="hljs-title class_">VNode</span><br>  <span class="hljs-keyword">let</span> <span class="hljs-attr">before</span>: any<br><br>  <span class="hljs-keyword">while</span> (oldStartIdx &lt;= oldEndIdx &amp;&amp; newStartIdx &lt;= newEndIdx) &#123;<br>    <span class="hljs-comment">// 索引变化后，可能会把节点设置为空</span><br>    <span class="hljs-keyword">if</span> (oldStartVnode == <span class="hljs-literal">null</span>) &#123;<br>      <span class="hljs-comment">// 节点为空移动索引</span><br>      oldStartVnode = oldCh[++oldStartIdx] <span class="hljs-comment">// Vnode might have been moved left</span><br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (oldEndVnode == <span class="hljs-literal">null</span>) &#123;<br>      oldEndVnode = oldCh[--oldEndIdx]<br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (newStartVnode == <span class="hljs-literal">null</span>) &#123;<br>      newStartVnode = newCh[++newStartIdx]<br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (newEndVnode == <span class="hljs-literal">null</span>) &#123;<br>      newEndVnode = newCh[--newEndIdx]<br>    <span class="hljs-comment">// 比较开始和结束节点的四种情况</span><br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">sameVnode</span>(oldStartVnode, newStartVnode)) &#123;<br>      <span class="hljs-comment">// 1. 比较老开始节点和新的开始节点</span><br>      <span class="hljs-title function_">patchVnode</span>(oldStartVnode, newStartVnode, insertedVnodeQueue)<br>      oldStartVnode = oldCh[++oldStartIdx]<br>      newStartVnode = newCh[++newStartIdx]<br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">sameVnode</span>(oldEndVnode, newEndVnode)) &#123;<br>      <span class="hljs-comment">// 2. 比较老结束节点和新的结束节点</span><br>      <span class="hljs-title function_">patchVnode</span>(oldEndVnode, newEndVnode, insertedVnodeQueue)<br>      oldEndVnode = oldCh[--oldEndIdx]<br>      newEndVnode = newCh[--newEndIdx]<br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">sameVnode</span>(oldStartVnode, newEndVnode)) &#123; <span class="hljs-comment">// Vnode moved right</span><br>      <span class="hljs-comment">// 3. 比较老开始节点和新的结束节点</span><br>      <span class="hljs-title function_">patchVnode</span>(oldStartVnode, newEndVnode, insertedVnodeQueue)<br>      api.<span class="hljs-title function_">insertBefore</span>(parentElm, oldStartVnode.<span class="hljs-property">elm</span>!, api.<span class="hljs-title function_">nextSibling</span>(oldEndVnode.<span class="hljs-property">elm</span>!))<br>      oldStartVnode = oldCh[++oldStartIdx]<br>      newEndVnode = newCh[--newEndIdx]<br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">sameVnode</span>(oldEndVnode, newStartVnode)) &#123; <span class="hljs-comment">// Vnode moved left</span><br>      <span class="hljs-comment">// 4. 比较老结束节点和新的开始节点</span><br>      <span class="hljs-title function_">patchVnode</span>(oldEndVnode, newStartVnode, insertedVnodeQueue)<br>      api.<span class="hljs-title function_">insertBefore</span>(parentElm, oldEndVnode.<span class="hljs-property">elm</span>!, oldStartVnode.<span class="hljs-property">elm</span>!)<br>      oldEndVnode = oldCh[--oldEndIdx]<br>      newStartVnode = newCh[++newStartIdx]<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>      <span class="hljs-comment">// 开始节点和结束节点都不相同</span><br>      <span class="hljs-comment">// 使用 newStartNode 的 key 再老节点数组中找相同节点</span><br>      <span class="hljs-comment">// 先设置记录 key 和 index 的对象</span><br>      <span class="hljs-keyword">if</span> (oldKeyToIdx === <span class="hljs-literal">undefined</span>) &#123;<br>        oldKeyToIdx = <span class="hljs-title function_">createKeyToOldIdx</span>(oldCh, oldStartIdx, oldEndIdx)<br>      &#125;<br>      <span class="hljs-comment">// 遍历 newStartVnode, 从老的节点中找相同 key 的 oldVnode 的索引</span><br>      idxInOld = oldKeyToIdx[newStartVnode.<span class="hljs-property">key</span> <span class="hljs-keyword">as</span> string]<br>      <span class="hljs-comment">// 如果是新的vnode</span><br>      <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isUndef</span>(idxInOld)) &#123; <span class="hljs-comment">// New element</span><br>        <span class="hljs-comment">// 如果没找到，newStartNode 是新节点</span><br>        <span class="hljs-comment">// 创建元素插入 DOM 树</span><br>        api.<span class="hljs-title function_">insertBefore</span>(parentElm, <span class="hljs-title function_">createElm</span>(newStartVnode, insertedVnodeQueue), oldStartVnode.<span class="hljs-property">elm</span>!)<br>      &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-comment">// 如果找到相同 key 相同的老节点，记录到 elmToMove 遍历</span><br>        elmToMove = oldCh[idxInOld]<br>        <span class="hljs-keyword">if</span> (elmToMove.<span class="hljs-property">sel</span> !== newStartVnode.<span class="hljs-property">sel</span>) &#123;<br>          <span class="hljs-comment">// 如果新旧节点的选择器不同</span><br>          <span class="hljs-comment">// 创建新开始节点对应的 DOM 元素，插入到 DOM 树中</span><br>          api.<span class="hljs-title function_">insertBefore</span>(parentElm, <span class="hljs-title function_">createElm</span>(newStartVnode, insertedVnodeQueue), oldStartVnode.<span class="hljs-property">elm</span>!)<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>          <span class="hljs-comment">// 如果相同，patchVnode()</span><br>          <span class="hljs-comment">// 把 elmToMove 对应的 DOM 元素，移动到左边</span><br>          <span class="hljs-title function_">patchVnode</span>(elmToMove, newStartVnode, insertedVnodeQueue)<br>          oldCh[idxInOld] = <span class="hljs-literal">undefined</span> <span class="hljs-keyword">as</span> any<br>          api.<span class="hljs-title function_">insertBefore</span>(parentElm, elmToMove.<span class="hljs-property">elm</span>!, oldStartVnode.<span class="hljs-property">elm</span>!)<br>        &#125;<br>      &#125;<br>      <span class="hljs-comment">// 重新给 newStartVnode 赋值，指向下一个新节点</span><br>      newStartVnode = newCh[++newStartIdx]<br>    &#125;<br>  &#125;<br>  <span class="hljs-comment">// 循环结束，老节点数组先遍历完成或者新节点数组先遍历完成</span><br>  <span class="hljs-keyword">if</span> (oldStartIdx &lt;= oldEndIdx || newStartIdx &lt;= newEndIdx) &#123;<br>    <span class="hljs-keyword">if</span> (oldStartIdx &gt; oldEndIdx) &#123;<br>      <span class="hljs-comment">// 如果老节点数组先遍历完成，说明有新的节点剩余</span><br>      <span class="hljs-comment">// 把剩余的新节点都插入到右边</span><br>      before = newCh[newEndIdx + <span class="hljs-number">1</span>] == <span class="hljs-literal">null</span> ? <span class="hljs-literal">null</span> : newCh[newEndIdx + <span class="hljs-number">1</span>].<span class="hljs-property">elm</span><br>      <span class="hljs-title function_">addVnodes</span>(parentElm, before, newCh, newStartIdx, newEndIdx, insertedVnodeQueue)<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>      <span class="hljs-comment">// 如果新节点数组先遍历完成，说明老节点有剩余</span><br>      <span class="hljs-comment">// 批量删除老节点</span><br>      <span class="hljs-title function_">removeVnodes</span>(parentElm, oldCh, oldStartIdx, oldEndIdx)<br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="调试-updateChildren"><a href="#调试-updateChildren" class="headerlink" title="调试 updateChildren"></a>调试 updateChildren</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>首页<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>微博<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>视频<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>首页<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>视频<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>微博<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="/img/assets/image-20200112120036948.png" srcset="/img/loading.gif" lazyload></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Vue/" class="category-chain-item">Vue</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Vue/" class="print-no-link">#Vue</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>通过snabbdom源码调试分析深入Virtual DOM原理</div>
+      <div>http://example.com/2021/06/03/通过snabbdom源码调试分析深入Virtual DOM原理/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>June 3, 2021</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/08/01/%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA%E8%A7%84%E8%8C%83%E4%B8%8E%E9%85%8D%E7%BD%AE/" title="项目搭建规范与配置">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">项目搭建规范与配置</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/05/11/Virtual%20DOM%20%E5%8F%8A%20Diff%20%E7%AE%97%E6%B3%95/" title="Virtual DOM 及 Diff 算法小结">
+                        <span class="hidden-mobile">Virtual DOM 及 Diff 算法小结</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>
