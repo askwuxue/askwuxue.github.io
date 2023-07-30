@@ -69,10 +69,10 @@ git reset --hard commitID 	// commitId 在查看版本历史的时候，会清�
 1. 解决冲突
     _冲突产生：一个文件，没有在同一个版本的基础上顺序修改就产生了冲突。如：A,B 拿了同一个版本的文件进行编辑，A编辑好了，并且push了。B随后编辑好了，也要push。但是这个时候A已经进行过编辑，B又编辑，就产生了冲突。本质是没有拿同一个版本的文件进行编辑。所以在正常情况下，最好拿最新版本进行编辑，可以有效避免冲突。如果冲突已经产生，课按照下面的方式进行处理_
     1.1 手动解决冲突，在merge的时候，Git会告诉我们有冲突，如下
-    ![conflict](/img/Git/conflict.png)
+    ![conflict](https://github.com/askwuxue/askwuxue.github.io/assets/32808762/df50bfba-476f-46f2-a1e8-cbd4e4bfb0c0)
 
   Git 告诉我们有冲突，需要我们手动进行合并。合并后如下
 
-  ![resolve conflict](/img/Git/resolve_conflict.png)
+  ![resolve_conflict](https://github.com/askwuxue/askwuxue.github.io/assets/32808762/1beb3c51-181e-42e4-bcd2-3cc2c8b3175a)
 
 手动合并结束，接下来，只需要像处理普通文件`git add`，`git commit`进行处理即可，至此，冲突解决完毕。
