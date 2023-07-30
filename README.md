@@ -12,3 +12,4 @@
 1. hexo clean 清楚缓存
 2. hexo g 生成
 3. hexo s 起一个本地服务器查看博客
+4. hexo d 部署修改到main，即最终博客。
