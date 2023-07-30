@@ -39,8 +39,8 @@ Vue和React等库的一个比较共同的地方是使用了Virtual DOM。为什�
 - 复杂视图情况下提升渲染性能
 
 - 除了渲染 DOM 以外，还可以实现 SSR(Nuxt.js/Next.js)、原生应用(Weex/React Native)、小程序(mpvue/uni-app)等
-
-   ![](/img/assets/image-20200102104642121.png)
+    
+    ![image-20200102104642121](https://github.com/askwuxue/askwuxue.github.io/assets/32808762/febdadc5-21d8-4939-bb4b-e56e04d8f3e7)
 
 ##  实现了Virtual DOM 的库
 
@@ -462,7 +462,7 @@ export function vnode (sel: string | undefined,
 - 如果新的 VNode 有 children，判断子节点是否有变化，判断子节点的过程使用的就是 diff 算法
 - diff 过程只进行同层级比较
 
-![](/img/assets/image-20200102103653779.png)
+![image-20200102103653779](https://github.com/askwuxue/askwuxue.github.io/assets/32808762/ad729f8b-8f17-498e-b887-563b071e18c0)
 
 
 
@@ -758,7 +758,7 @@ export function vnode (sel: string | undefined,
   - 在DOM 操作的时候我们很少很少会把一个父节点移动/更新到某一个子节点
   - 因此只需要找**同级别**的子**节点**依次**比较**，然后再找下一级别的节点比较，这样算法的时间复杂度为 O(n)
 
-  ![](/img/assets/image-20200102103653779.png)
+  ![image-20200102103653779](https://github.com/askwuxue/askwuxue.github.io/assets/32808762/357779ed-ff33-4b39-8552-0495725caa0e)
 
   - 在进行同级别节点比较的时候，首先会对新老节点数组的开始和结尾节点设置标记索引，遍历的过程中移动索引
   - 在对**开始和结束节点**比较的时候，总共有四种情况
@@ -767,7 +767,7 @@ export function vnode (sel: string | undefined,
     - oldStartVnode / oldEndVnode (旧开始节点 / 新结束节点)
     - oldEndVnode / newStartVnode (旧结束节点 / 新开始节点)
 
-  ![](/img/assets/image-20200109184608649.png)
+  ![image-20200109184608649](https://github.com/askwuxue/askwuxue.github.io/assets/32808762/b94ef29b-0eaa-4735-b612-fd4ec1026ef1)
 
   - 开始节点和结束节点比较，这两种情况类似
     - oldStartVnode / newStartVnode (旧开始节点 / 新开始节点)
@@ -776,21 +776,24 @@ export function vnode (sel: string | undefined,
     - 调用 patchVnode() 对比和更新节点
     - 把旧开始和新开始索引往后移动  oldStartIdx++ / oldEndIdx++
 
-  ![](/img/assets/image-20200103121812840.png)
+  
+    ![image-20200103121812840](https://github.com/askwuxue/askwuxue.github.io/assets/32808762/66cad44e-42ac-447b-9f42-fe4acbb4ca73)
 
    - oldStartVnode / newEndVnode (旧开始节点 / 新结束节点) 相同
      	- 调用 patchVnode() 对比和更新节点
       - 把 oldStartVnode 对应的 DOM 元素，移动到右边
         	- 更新索引
 
-  ![](/img/assets/image-20200103125428541.png)
+  
+    ![image-20200103125428541](https://github.com/askwuxue/askwuxue.github.io/assets/32808762/ec75dbc0-8de2-4356-a273-f1e2ac3b47c9)
 
   - oldEndVnode / newStartVnode (旧结束节点 / 新开始节点) 相同
     - 调用 patchVnode() 对比和更新节点
      - 把 oldEndVnode 对应的 DOM 元素，移动到左边
      - 更新索引
 
-  ![](/img/assets/image-20200103125735048.png)
+  
+    ![image-20200103125735048](https://github.com/askwuxue/askwuxue.github.io/assets/32808762/eda67988-af62-4692-957a-5260a797ecdb)
 
   - 如果不是以上四种情况
     - 遍历新节点，使用 newStartNode 的 key 在老节点数组中找相同节点
@@ -802,20 +805,19 @@ export function vnode (sel: string | undefined,
         - 重新创建对应的 DOM 元素，插入到 DOM 树中
       - 如果相同，把 elmToMove 对应的 DOM 元素，移动到左边
 
-  ![](/img/assets/image-20200109184822439.png)
+  ![image-20200109184822439](https://github.com/askwuxue/askwuxue.github.io/assets/32808762/1aa9102c-f0bf-4941-9fc7-74a37b64f59e)
 
   - 循环结束
     - 当老节点的所有子节点先遍历完 (oldStartIdx > oldEndIdx)，循环结束
     - 新节点的所有子节点先遍历完 (newStartIdx > newEndIdx)，循环结束
   - 如果老节点的数组先遍历完(oldStartIdx > oldEndIdx)，说明新节点有剩余，把剩余节点批量插入到右边
 
-  ![](/img/assets/image-20200103150918335.png)
-
+  ![image-20200103150918335](https://github.com/askwuxue/askwuxue.github.io/assets/32808762/0f238b79-9e8e-44f9-af92-18d6706621d0)
   ​	
 
     - 如果新节点的数组先遍历完(newStartIdx > newEndIdx)，说明老节点有剩余，把剩余节点批量删除
 
-  ![](/img/assets/image-20200109194751093.png)
+  ![image-20200109194751093](https://github.com/askwuxue/askwuxue.github.io/assets/32808762/045f37de-be02-4881-830c-95f9970026e7)
 
 - 源码位置：src/package/init.ts
 
@@ -936,4 +938,4 @@ export function vnode (sel: string | undefined,
 </ul>
 ```
 
-![](/img/assets/image-20200112120036948.png)
+![image-20200112120036948](https://github.com/askwuxue/askwuxue.github.io/assets/32808762/c3b5d4bd-e2d8-45e0-95a6-cf7edf3ca1ad)
