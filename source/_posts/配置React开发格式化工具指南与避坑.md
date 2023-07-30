@@ -42,15 +42,16 @@ categories: 工程化
 
    - 格式化之前的代码片段
 
-   ![格式化之前](/img/格式化/prettier.png)
+    ![prettier](https://github.com/askwuxue/askwuxue.github.io/assets/32808762/78fe79ab-d21f-44f4-9f3f-66cbe8164fb0)
 
    格式化之前代码没有换行，所以超出了vscode的显示区，或许很多同学都会配置vscode的最大显示长度。但是因为每个人配置不一样，为了能让一套代码，在所有人的编辑器里显示效果一样。所以使用prettier
 
    
 
    - 格式化之后的代码片段
-
-     ![](/img/格式化/prettier_after.png)
+   
+   ![prettier_after](https://github.com/askwuxue/askwuxue.github.io/assets/32808762/e97c4b71-12b0-4af5-afb4-e1f09e80a224)
+     
 
 5. 每次格式化时，都需要敲``npx prettier --write`这条命令，略显繁琐。我们想要更只能的方式。这里有两种方案，一种是使用`prettier`支持的编辑器插件，如`vscode`的`Prettier - Code formatter`，只需要在`vscode`中安装，然后就可以使用快捷键`Ctrl + Shift + P`来对文件进行格式化。但是我们觉得这种方式还是不够智能，所以重点介绍下面的方法，使用自动化工具帮助我们进行格式化。
 
